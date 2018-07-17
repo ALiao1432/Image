@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Image</string>
+    <string name="need_permission">Need permission</string>
+    <string name="permission_dialog_content">This app need the read and write external storage
+        permissions to work.</string>
+    <string name="permission_dialog_accept">Accept</string>
+    <string name="permission_dialog_cancel">Cancel</string>
+</resources>
