@@ -10,8 +10,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TableLayout;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     private final int MY_WRITE_EXTERNAL_REQUEST_CODE = 999;
+    private List<String> imgPathList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,11 @@ public class MainActivity extends AppCompatActivity {
                 || needToAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showPermissionDialog();
         } else {
-            getSdDirectory();
+            long startTime = System.nanoTime();
+            getAllImgFile();
+            long totalTime = System.nanoTime() - startTime;
+            Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
+            Log.d(TAG, "total size : " + imgPathList.size());
         }
     }
 
@@ -64,17 +71,34 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_WRITE_EXTERNAL_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getSdDirectory();
+                getAllImgFile();
             } else {
                 finish();
             }
         }
     }
 
-    private void getSdDirectory() {
-        List<File> sdFilePath = Arrays.asList(Environment.getExternalStorageDirectory().listFiles());
-        sdFilePath.stream()
-                .sorted()
-                .forEach(file -> Log.d(TAG, "file path : " + file.getPath()));
+    private void getAllImgFile() {
+        List<File> sdFilePathList = Arrays.asList(Environment.getExternalStorageDirectory().listFiles());
+        sdFilePathList.forEach(this::getChildDirFile);
+    }
+
+    private void getChildDirFile(File file) {
+        if (!file.isHidden()) {
+            if (file.isDirectory() && hasChildDirectory(file)) {
+                Arrays.stream(file.listFiles()).forEach(this::getChildDirFile);
+            } else if (file.isFile() && isJPGorPNG(file)) {
+                imgPathList.add(file.getPath());
+            }
+        }
+    }
+
+    private boolean isJPGorPNG(File file) {
+        String s = file.getPath();
+        return s.endsWith(".jpg") || s.endsWith(".png");
+    }
+
+    private boolean hasChildDirectory(File file) {
+        return Arrays.asList(file.listFiles()).size() != 0;
     }
 }
