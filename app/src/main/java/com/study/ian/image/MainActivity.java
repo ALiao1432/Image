@@ -2,15 +2,14 @@ package com.study.ian.image;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TableLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
             long startTime = System.nanoTime();
             getAllImgFile();
             long totalTime = System.nanoTime() - startTime;
+            imgPathList.forEach(s -> Log.d(TAG, "imgPath : " + s));
             Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
             Log.d(TAG, "total size : " + imgPathList.size());
         }
