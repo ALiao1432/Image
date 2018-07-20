@@ -2,18 +2,17 @@ package com.study.ian.image;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Process;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,13 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         if (needToAskPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 || needToAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showPermissionDialog();
         } else {
             long startTime = System.nanoTime();
-            getAllImgFile();
+            imgPathList = getAllImgFile();
             long totalTime = System.nanoTime() - startTime;
             imgPathList.forEach(s -> Log.d(TAG, "imgPath : " + s));
             Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
@@ -71,34 +69,35 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_WRITE_EXTERNAL_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getAllImgFile();
+                imgPathList = getAllImgFile();
             } else {
                 finish();
             }
         }
     }
 
-    private void getAllImgFile() {
-        List<File> sdFilePathList = Arrays.asList(Environment.getExternalStorageDirectory().listFiles());
-        sdFilePathList.forEach(this::getChildDirFile);
-    }
+    private List<String> getAllImgFile() {
+        List<String> tempList = new ArrayList<>();
 
-    private void getChildDirFile(File file) {
-        if (!file.isHidden()) {
-            if (file.isDirectory() && hasChildDirectory(file)) {
-                Arrays.stream(file.listFiles()).forEach(this::getChildDirFile);
-            } else if (file.isFile() && isJPGorPNG(file)) {
-                imgPathList.add(file.getPath());
+        try {
+            final String[] columns = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
+            final String orderBy = MediaStore.Images.Media.DATE_MODIFIED;
+
+            Cursor imageCursor = getContentResolver().query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns,
+                    null, null, orderBy + " DESC");
+            if (imageCursor != null) {
+                while (imageCursor.moveToNext()) {
+                    int dataColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                    String imgPath = imageCursor.getString(dataColumnIndex);
+                    if (imgPath != null) {
+                        tempList.add(imgPath);
+                    }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    private boolean isJPGorPNG(File file) {
-        String s = file.getPath();
-        return s.endsWith(".jpg") || s.endsWith(".png");
-    }
-
-    private boolean hasChildDirectory(File file) {
-        return Arrays.asList(file.listFiles()).size() != 0;
+        return tempList;
     }
 }
