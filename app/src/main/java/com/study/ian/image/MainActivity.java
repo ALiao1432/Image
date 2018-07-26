@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
         // set Adapter
         MyAdapter myAdapter = new MyAdapter(this, imgPathList);
         recyclerView.setAdapter(myAdapter);
+
+        // set list-item selection
+        // TODO: 2018-07-26 study recyclerview-selection library
+
+        // set ItemDecoration
+        // TODO: 2018-07-26 study ItemDecoration
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
     }
 
     private boolean needToAskPermission(String p) {
