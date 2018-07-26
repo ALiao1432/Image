@@ -21,6 +21,8 @@ import com.study.ian.image.view.MyAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: 2018-07-26 add floating button if selected any img
+
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
@@ -38,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
                 || needToAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showPermissionDialog();
         } else {
-            long startTime = System.nanoTime();
+//            long startTime = System.nanoTime();
             imgPathList = getAllImgFile();
-            long totalTime = System.nanoTime() - startTime;
-            imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
-            Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
-            Log.d(TAG, "total size : " + imgPathList.size());
+//            long totalTime = System.nanoTime() - startTime;
+//            imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
+//            Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
+//            Log.d(TAG, "total size : " + imgPathList.size());
 
             findView();
             setRecyclerView();
@@ -95,12 +97,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_WRITE_EXTERNAL_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            long startTime = System.nanoTime();
+//                long startTime = System.nanoTime();
                 imgPathList = getAllImgFile();
-            long totalTime = System.nanoTime() - startTime;
-            imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
-            Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
-            Log.d(TAG, "total size : " + imgPathList.size());
+//                long totalTime = System.nanoTime() - startTime;
+//                imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
+//                Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
+//                Log.d(TAG, "total size : " + imgPathList.size());
 
                 findView();
                 setRecyclerView();
