@@ -2,6 +2,7 @@ package com.study.ian.image;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -22,7 +23,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private String[] detailData;
     private View decorView;
-    private GestureDetector gestureDetector;
+    private GestureDetectorCompat gestureDetectorCompat;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -41,39 +42,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         findView();
         setView();
 
-        gestureDetector = new GestureDetector(this.getApplicationContext(), new GestureDetector.OnGestureListener() {
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                Log.d(TAG, "onSingleTapUp hideUi");
-                hideUi();
-                return true;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                return false;
-            }
-        });
+        gestureDetectorCompat = new GestureDetectorCompat(this.getApplicationContext(), new CusGestureListener());
 
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
@@ -99,7 +68,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
         linearLayout.setOnTouchListener((v, event) -> {
-            gestureDetector.onTouchEvent(event);
+            gestureDetectorCompat.onTouchEvent(event);
             return true;
         });
     }
@@ -113,6 +82,15 @@ public class ImageDetailActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
             );
+        }
+    }
+
+    private class CusGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d(TAG, "onSingleTapUp hideUi");
+            hideUi();
+            return true;
         }
     }
 }
