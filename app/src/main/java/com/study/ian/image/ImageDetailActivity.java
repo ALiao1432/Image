@@ -2,7 +2,6 @@ package com.study.ian.image;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -100,14 +99,10 @@ public class ImageDetailActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
         linearLayout.setOnTouchListener((v, event) -> {
-            int flag = decorView.getSystemUiVisibility();
-            Log.d(TAG, "flag " + flag);
-
             gestureDetector.onTouchEvent(event);
             return true;
         });
     }
-
 
     private void hideUi() {
         if (decorView != null) {
