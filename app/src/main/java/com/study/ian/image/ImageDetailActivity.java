@@ -75,7 +75,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     private void hideUi() {
         if (decorView != null) {
-            Log.d(TAG, "hideUi");
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -88,7 +87,6 @@ public class ImageDetailActivity extends AppCompatActivity {
     private class CusGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            Log.d(TAG, "onSingleTapUp hideUi");
             hideUi();
             return true;
         }
