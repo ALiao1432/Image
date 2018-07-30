@@ -35,25 +35,36 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder");
-
         View view = LayoutInflater.from(context).inflate(R.layout.recyclerview_holder, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder");
-
         ImageView imageView = holder.imageView;
+
+        // add listener for imageView
         imageView.setOnClickListener(v -> {
             if (position != RecyclerView.NO_POSITION) {
-                Intent intent = new Intent(context, ImageDetailActivity.class);
-                Bundle bundle = new Bundle();
+                if (imageSelectedList.size() == 0) {
+                    // if there is no selected item then go to ImageDetailActivity
+                    Intent intent = new Intent(context, ImageDetailActivity.class);
+                    Bundle bundle = new Bundle();
 
-                bundle.putStringArray(CLICKED_IMG, imageDataList.get(position).toArray());
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                    bundle.putStringArray(CLICKED_IMG, imageDataList.get(position).toArray());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                } else {
+                    // if selected one item then user will be able to start quick select
+                    if (imageSelectedList.contains(position)) {
+                        int index = imageSelectedList.indexOf(position);
+                        imageSelectedList.remove(index);
+                        imageView.setAlpha(1f);
+                    } else {
+                        imageSelectedList.add(position);
+                        imageView.setAlpha(0.5f);
+                    }
+                }
             }
         });
         imageView.setOnLongClickListener(v -> {
@@ -85,8 +96,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount");
-
         return imageDataList.size();
     }
 
@@ -95,8 +104,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         MyViewHolder(View view) {
             super(view);
-            Log.d(TAG, "MyViewHolder");
-
             imageView = view.findViewById(R.id.imageHolderView);
         }
     }
