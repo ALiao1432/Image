@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,16 @@ import com.study.ian.image.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAdapter.MyViewHolder> {
 
-    private final String TAG = "MyAdapter";
+    private final String TAG = "MyRecyclerVIewAdapter";
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
     private Context context;
     private List<ImageData> imageDataList;
     private List<Integer> imageSelectedList = new ArrayList<>();
 
-    public MyAdapter(Context context, List<ImageData> list) {
+    public MyRecyclerVIewAdapter(Context context, List<ImageData> list) {
         this.context = context;
         imageDataList = list;
     }

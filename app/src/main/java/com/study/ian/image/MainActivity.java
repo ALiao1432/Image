@@ -13,14 +13,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.View;
 
-import com.study.ian.image.view.MyAdapter;
+import com.study.ian.image.view.MyRecyclerVIewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // set Adapter
-        MyAdapter myAdapter = new MyAdapter(this, imgPathList);
-        recyclerView.setAdapter(myAdapter);
+        MyRecyclerVIewAdapter myRecyclerVIewAdapter = new MyRecyclerVIewAdapter(this, imgPathList);
+        recyclerView.setAdapter(myRecyclerVIewAdapter);
 
         // set list-item selection
         // TODO: 2018-07-26 study recyclerview-selection library

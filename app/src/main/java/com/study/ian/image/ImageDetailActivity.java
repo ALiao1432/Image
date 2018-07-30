@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.study.ian.image.view.MyAdapter;
+import com.study.ian.image.view.MyRecyclerVIewAdapter;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
@@ -48,7 +48,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         if (bundle == null) {
             Log.d(TAG, "savedInstanceState is null");
         } else {
-            detailData = bundle.getStringArray(MyAdapter.CLICKED_IMG);
+            detailData = bundle.getStringArray(MyRecyclerVIewAdapter.CLICKED_IMG);
 
             Glide.with(this)
                     .load(detailData[0])
