@@ -1,13 +1,15 @@
 package com.study.ian.image;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -23,7 +25,9 @@ public class ImageDetailActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private String[] detailData;
     private View decorView;
-    private GestureDetectorCompat gestureDetectorCompat;
+    private ScaleGestureDetector scaleGestureDetector;
+    private GestureDetector gestureDetector;
+    private ValueAnimator scaleAnimator;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -39,10 +43,13 @@ public class ImageDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
+        scaleGestureDetector = new ScaleGestureDetector(this, new CusScaleGestureListener());
+        gestureDetector = new GestureDetector(this, new CusGestureListener());
+        scaleAnimator = new ValueAnimator();
+
+        initValueAnimator();
         findView();
         setView();
-
-        gestureDetectorCompat = new GestureDetectorCompat(this.getApplicationContext(), new CusGestureListener());
 
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
@@ -59,6 +66,11 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void initValueAnimator() {
+        scaleAnimator.setDuration(150);
+        scaleAnimator.setInterpolator(new LinearInterpolator());
+    }
+
     private void findView() {
         decorView = getWindow().getDecorView();
         linearLayout = findViewById(R.id.detailLinearLayout);
@@ -68,7 +80,8 @@ public class ImageDetailActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
         linearLayout.setOnTouchListener((v, event) -> {
-            gestureDetectorCompat.onTouchEvent(event);
+            scaleGestureDetector.onTouchEvent(event);
+            gestureDetector.onTouchEvent(event);
             return true;
         });
     }
@@ -80,15 +93,55 @@ public class ImageDetailActivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             );
+        }
+    }
+
+    private void scaleImage(float fromScale, float toScale) {
+        scaleAnimator.setFloatValues(fromScale, toScale);
+        scaleAnimator.addUpdateListener(valueAnimator -> {
+            detailImageView.setScaleX((float) valueAnimator.getAnimatedValue());
+            detailImageView.setScaleY((float) valueAnimator.getAnimatedValue());
+        });
+        scaleAnimator.start();
+
+    }
+
+    // TODO: 2018-07-31 there is a bug : scale again issue
+    private class CusScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scaleFactor = Math.abs(detector.getScaleFactor());
+
+            if (scaleFactor >= 0.75f) {
+                detailImageView.setScaleX(scaleFactor);
+                detailImageView.setScaleY(scaleFactor);
+            }
+            return false;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            float currentScale = detailImageView.getScaleX();
+
+            if (currentScale < 1f) {
+                scaleImage(currentScale, 1f);
+            }
         }
     }
 
     private class CusGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            hideUi();
-            return true;
+        public boolean onDoubleTap(MotionEvent e) {
+            float currentScale = detailImageView.getScaleX();
+
+            if (currentScale != 1f) {
+                scaleImage(currentScale, 1f);
+            } else {
+                scaleImage(1f, 2f);
+            }
+            return false;
         }
     }
 }

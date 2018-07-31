@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
         MyRecyclerVIewAdapter myRecyclerVIewAdapter = new MyRecyclerVIewAdapter(this, imgPathList);
         recyclerView.setAdapter(myRecyclerVIewAdapter);
 
-        // set list-item selection
-        // TODO: 2018-07-26 study recyclerview-selection library
-
         // set ItemDecoration
         // TODO: 2018-07-26 study ItemDecoration
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -79,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
         // add floating button
         // TODO: 2018-07-27 study FloatingActionButton
+
+        // TODO: 2018-07-30 ViewPager
     }
 
     private boolean needToAskPermission(String p) {
