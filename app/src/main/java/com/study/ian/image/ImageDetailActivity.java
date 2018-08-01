@@ -2,6 +2,8 @@ package com.study.ian.image;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,6 +31,8 @@ public class ImageDetailActivity extends AppCompatActivity {
     private GestureDetector gestureDetector;
     private ValueAnimator scaleAnimator;
     private float currentScale = 1f;
+    private float dx = 0f;
+    private float dy = 0f;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -109,6 +113,13 @@ public class ImageDetailActivity extends AppCompatActivity {
         currentScale = toScale;
     }
 
+    private void setImageToNormalSize() {
+        detailImageView.setTranslationX(0);
+        detailImageView.setTranslationY(0);
+        dx = 0f;
+        dy = 0f;
+    }
+
     private class CusScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -116,8 +127,8 @@ public class ImageDetailActivity extends AppCompatActivity {
             float scale = (currentScale - 1f) * scaleFactor + scaleFactor;
 
             if (scale >= 0.75f) {
-                    detailImageView.setScaleX(scale);
-                    detailImageView.setScaleY(scale);
+                detailImageView.setScaleX(scale);
+                detailImageView.setScaleY(scale);
             }
             return false;
         }
@@ -128,6 +139,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
             if (currentScale < 1f) {
                 scaleImageWithAnimation(currentScale, 1f);
+                setImageToNormalSize();
                 currentScale = 1f;
             }
         }
@@ -143,7 +155,22 @@ public class ImageDetailActivity extends AppCompatActivity {
             } else {
                 scaleImageWithAnimation(1f, 2.5f);
             }
+            setImageToNormalSize();
             return false;
+        }
+
+        // TODO: 2018-08-01 there is a bug : translation margin need to tale care
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            switch (e2.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    dx += distanceX;
+                    dy += distanceY;
+                    detailImageView.setTranslationX(-dx);
+                    detailImageView.setTranslationY(-dy);
+                    break;
+            }
+            return super.onScroll(e1, e2, distanceX, distanceY);
         }
     }
 }
