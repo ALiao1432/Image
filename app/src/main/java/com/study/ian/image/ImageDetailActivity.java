@@ -28,6 +28,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
     private ValueAnimator scaleAnimator;
+    private float currentScale = 1f;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -67,7 +68,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     private void initValueAnimator() {
-        scaleAnimator.setDuration(150);
+        scaleAnimator.setDuration(120);
         scaleAnimator.setInterpolator(new LinearInterpolator());
     }
 
@@ -98,35 +99,36 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void scaleImage(float fromScale, float toScale) {
+    private void scaleImageWithAnimation(float fromScale, float toScale) {
         scaleAnimator.setFloatValues(fromScale, toScale);
         scaleAnimator.addUpdateListener(valueAnimator -> {
             detailImageView.setScaleX((float) valueAnimator.getAnimatedValue());
             detailImageView.setScaleY((float) valueAnimator.getAnimatedValue());
         });
         scaleAnimator.start();
-
+        currentScale = toScale;
     }
 
-    // TODO: 2018-07-31 there is a bug : scale again issue
     private class CusScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = Math.abs(detector.getScaleFactor());
+            float scale = (currentScale - 1f) * scaleFactor + scaleFactor;
 
-            if (scaleFactor >= 0.75f) {
-                detailImageView.setScaleX(scaleFactor);
-                detailImageView.setScaleY(scaleFactor);
+            if (scale >= 0.75f) {
+                    detailImageView.setScaleX(scale);
+                    detailImageView.setScaleY(scale);
             }
             return false;
         }
 
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-            float currentScale = detailImageView.getScaleX();
+            currentScale = detailImageView.getScaleX();
 
             if (currentScale < 1f) {
-                scaleImage(currentScale, 1f);
+                scaleImageWithAnimation(currentScale, 1f);
+                currentScale = 1f;
             }
         }
     }
@@ -137,9 +139,9 @@ public class ImageDetailActivity extends AppCompatActivity {
             float currentScale = detailImageView.getScaleX();
 
             if (currentScale != 1f) {
-                scaleImage(currentScale, 1f);
+                scaleImageWithAnimation(currentScale, 1f);
             } else {
-                scaleImage(1f, 2f);
+                scaleImageWithAnimation(1f, 2.5f);
             }
             return false;
         }
