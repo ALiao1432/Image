@@ -43,6 +43,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         if (hasFocus) {
             hideUi();
+            loadImage();
         }
     }
 
@@ -51,8 +52,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
-        String[] detailData;
-
         scaleGestureDetector = new ScaleGestureDetector(this, new CusScaleGestureListener());
         gestureDetector = new GestureDetector(this, new CusGestureListener());
         scaleAnimator = new ValueAnimator();
@@ -60,12 +59,14 @@ public class ImageDetailActivity extends AppCompatActivity {
         initValueAnimator();
         findView();
         setView();
+    }
 
+    private void loadImage() {
         Bundle bundle = getIntent().getExtras();
         if (bundle == null) {
             Log.d(TAG, "savedInstanceState is null");
         } else {
-            detailData = bundle.getStringArray(MyRecyclerVIewAdapter.CLICKED_IMG);
+            String[] detailData = bundle.getStringArray(MyRecyclerVIewAdapter.CLICKED_IMG);
 
             Glide.with(this)
                     .load(detailData[0])
