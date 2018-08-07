@@ -9,12 +9,17 @@ import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ScaleGestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.View;
 
 import com.study.ian.image.view.MyRecyclerVIewAdapter;
 
@@ -30,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_WRITE_EXTERNAL_REQUEST_CODE = 999;
     private List<ImageData> imgPathList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private GridLayoutManager gridLayoutManager;
+    private ScaleGestureDetector scaleGestureDetector;
+    private int spanCount = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d(TAG, "total size : " + imgPathList.size());
 
             findView();
+            initDetector();
             setRecyclerView();
         }
     }
@@ -58,10 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRecyclerView() {
         // set Layout Manager
-//        StaggeredGridLayoutManager staggeredGridLayoutManager =
-//                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, 2);
+        gridLayoutManager = new GridLayoutManager(this, spanCount);
         gridLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -78,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
         // TODO: 2018-07-27 study FloatingActionButton
 
         // TODO: 2018-07-30 ViewPager
+
+        // set onTouchListener for recyclerView
+        recyclerView.setOnTouchListener((v, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return false;
+        });
+    }
+
+    private void initDetector() {
+        scaleGestureDetector = new ScaleGestureDetector(this, new RecyclerViewScaleDetector());
     }
 
     private boolean needToAskPermission(String p) {
@@ -163,5 +179,38 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return tempList;
+    }
+
+    private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        private final int maxSpanCount = 5;
+        private float currentScale;
+        private boolean canScale = true;
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            currentScale = detector.getScaleFactor();
+
+            if (canScale) {
+                if (currentScale < 1f) {
+                    if (spanCount < maxSpanCount) {
+                        spanCount++;
+                        canScale = false;
+                    }
+                } else if (currentScale > 1f){
+                    spanCount--;
+                    if (spanCount == 0) {
+                        spanCount = 1;
+                    }
+                    canScale = false;
+                }
+                gridLayoutManager.setSpanCount(spanCount);
+            }
+            return super.onScale(detector);
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            canScale = true;
+        }
     }
 }

@@ -8,12 +8,18 @@ public class ImageParameter {
 
     private int width;
     private int height;
+    private int screenWidth;
+    private int screenHeight;
+    private int left;
+    private int right;
+    private int top;
+    private int bottom;
 
-    ImageParameter(int w, int h) {
-        this.width = w;
-        this.height = h;
-
-        Log.d(TAG, "ImageParameter w : " + width + ", h : " + height);
+    ImageParameter(int width, int height, int screenWidth, int screenHeight) {
+        this.width = width;
+        this.height = height;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
     }
 
     public int getWidth() {
@@ -22,5 +28,28 @@ public class ImageParameter {
 
     public int getHeight() {
         return height;
+    }
+
+    public void setImageFourSides(int currentWidth, int currentHeight, int translateX, int translateY) {
+        left = (screenWidth - currentWidth) / 2 + translateX;
+        right = (screenWidth + currentWidth) / 2 + translateX;
+        top = (screenHeight - currentHeight) / 2 + translateY;
+        bottom = (screenHeight + currentHeight) / 2 + translateY;
+    }
+
+    public boolean isLeftOutside() {
+        return left < 0;
+    }
+
+    public boolean isRightOutside() {
+        return right > screenWidth;
+    }
+
+    public boolean isTopOutside() {
+        return top < 0;
+    }
+
+    public boolean isBottomOutside() {
+        return bottom > screenHeight;
     }
 }

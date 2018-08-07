@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -58,7 +59,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         initValueAnimator();
         findView();
-        setView();
     }
 
     private void loadImage() {
@@ -82,7 +82,20 @@ public class ImageDetailActivity extends AppCompatActivity {
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             // set width and height after resource is ready
-                            imageParameter = new ImageParameter(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                            DisplayMetrics displayMetrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+                            int screenWidth = displayMetrics.widthPixels;
+                            int screenHeight = displayMetrics.heightPixels;
+
+                            currentWidth = resource.getIntrinsicWidth();
+                            currentHeight = resource.getIntrinsicHeight();
+                            imageParameter = new ImageParameter(
+                                    currentWidth,
+                                    currentHeight,
+                                    screenWidth,
+                                    screenHeight
+                            );
+                            setView();
                             return false;
                         }
                     })
@@ -167,6 +180,13 @@ public class ImageDetailActivity extends AppCompatActivity {
                 currentWidth = (int) (currentScale * imageParameter.getWidth());
                 currentHeight = (int) (currentScale * imageParameter.getHeight());
             }
+
+            imageParameter.setImageFourSides(
+                    currentWidth,
+                    currentHeight,
+                    (int) detailImageView.getTranslationX(),
+                    (int) detailImageView.getTranslationY()
+            );
         }
     }
 
@@ -183,18 +203,43 @@ public class ImageDetailActivity extends AppCompatActivity {
             } else {
                 scaleImageWithAnimation(1f, 2.5f);
             }
+
+            imageParameter.setImageFourSides(
+                    currentWidth,
+                    currentHeight,
+                    (int) detailImageView.getTranslationX(),
+                    (int) detailImageView.getTranslationY()
+            );
             return false;
         }
 
-        // TODO: 2018-08-01 there is a bug : translation margin need to tale care
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             switch (e2.getAction()) {
                 case MotionEvent.ACTION_MOVE:
-                    dx += distanceX;
-                    dy += distanceY;
-                    detailImageView.setTranslationX(-dx);
-                    detailImageView.setTranslationY(-dy);
+                    Log.d(TAG, "distanceX : " + distanceX + ", distanceY : " + distanceY);
+                    if ((imageParameter.isLeftOutside() && distanceX < 0)
+                            || (imageParameter.isRightOutside() && distanceX > 0)) {
+                        dx += distanceX;
+                        detailImageView.setTranslationX(-dx);
+                        imageParameter.setImageFourSides(
+                                currentWidth,
+                                currentHeight,
+                                (int) detailImageView.getTranslationX(),
+                                (int) detailImageView.getTranslationY()
+                        );
+                    }
+                    if ((imageParameter.isTopOutside() && distanceY < 0)
+                            || imageParameter.isBottomOutside() && distanceY > 0) {
+                        dy += distanceY;
+                        detailImageView.setTranslationY(-dy);
+                        imageParameter.setImageFourSides(
+                                currentWidth,
+                                currentHeight,
+                                (int) detailImageView.getTranslationX(),
+                                (int) detailImageView.getTranslationY()
+                        );
+                    }
                     break;
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
