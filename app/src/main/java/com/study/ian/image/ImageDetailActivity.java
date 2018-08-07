@@ -161,7 +161,7 @@ public class ImageDetailActivity extends AppCompatActivity {
             float scaleFactor = Math.abs(detector.getScaleFactor());
             float scale = (currentScale - 1f) * scaleFactor + scaleFactor;
 
-            if (scale >= 0.75f) {
+            if (scale >= .5f) {
                 detailImageView.setScaleX(scale);
                 detailImageView.setScaleY(scale);
             }
@@ -172,7 +172,9 @@ public class ImageDetailActivity extends AppCompatActivity {
         public void onScaleEnd(ScaleGestureDetector detector) {
             currentScale = detailImageView.getScaleX();
 
-            if (currentScale < 1f) {
+            if (currentScale < .7f) {
+                ImageDetailActivity.this.finish();
+            } else if (currentScale < 1f) {
                 scaleImageWithAnimation(currentScale, 1f);
                 setImageToOriginPosition();
                 currentScale = 1f;
