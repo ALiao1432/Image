@@ -217,7 +217,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             switch (e2.getAction()) {
                 case MotionEvent.ACTION_MOVE:
-                    Log.d(TAG, "distanceX : " + distanceX + ", distanceY : " + distanceY);
                     if ((imageParameter.isLeftOutside() && distanceX < 0)
                             || (imageParameter.isRightOutside() && distanceX > 0)) {
                         dx += distanceX;
