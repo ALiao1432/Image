@@ -15,11 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.study.ian.image.customview.MyRecyclerVIewAdapter;
+import com.study.ian.image.customview.MyRecyclerViewAdapter;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
@@ -66,7 +65,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         if (bundle == null) {
             Log.d(TAG, "savedInstanceState is null");
         } else {
-            String[] detailData = bundle.getStringArray(MyRecyclerVIewAdapter.CLICKED_IMG);
+            String[] detailData = bundle.getStringArray(MyRecyclerViewAdapter.CLICKED_IMG);
 
             Glide.with(this)
                     .load(detailData[0])

@@ -1,6 +1,7 @@
 package com.study.ian.image;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,7 +18,7 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.ScaleGestureDetector;
 
-import com.study.ian.image.customview.MyRecyclerVIewAdapter;
+import com.study.ian.image.customview.MyRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setRecyclerView() {
         // set Layout Manager
         gridLayoutManager = new GridLayoutManager(this, spanCount);
@@ -69,11 +71,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         // set Adapter
-        MyRecyclerVIewAdapter myRecyclerVIewAdapter = new MyRecyclerVIewAdapter(this, imgPathList);
-        recyclerView.setAdapter(myRecyclerVIewAdapter);
+        MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter(this, imgPathList);
+        recyclerView.setAdapter(myRecyclerViewAdapter);
 
         // set ItemDecoration
-        // TODO: 2018-07-26 study ItemDecoration
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
