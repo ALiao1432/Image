@@ -89,8 +89,6 @@ public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAd
                 .load(imageDataList.get(position).getData())
                 .placeholder(R.color.colorNavigationBar)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
                 .into(imageView);
     }
 
