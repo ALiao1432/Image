@@ -21,6 +21,7 @@ import com.study.ian.image.customview.MyRecyclerVIewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO: 2018-07-26 add floating button if selected any img
 
@@ -171,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 imageCursor.close();
             }
+
+            tempList = tempList.stream()
+                    .filter(data -> !data.getDisplayName().endsWith(".gif")) // filter out .gif file
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
         }
