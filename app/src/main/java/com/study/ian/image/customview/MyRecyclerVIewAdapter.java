@@ -1,9 +1,11 @@
-package com.study.ian.image.view;
+package com.study.ian.image.customview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,9 @@ public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAd
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        ImageView imageView = holder.imageView;
+        MorphView imageView = holder.imageView;
+        imageView.setPaintColor(Color.argb(0, 0, 0, 0));
+        imageView.setCurrentId(R.drawable.vd_image_selected_init);
 
         // add listener for imageView
         imageView.setOnClickListener(v -> {
@@ -55,33 +59,30 @@ public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAd
                     context.startActivity(intent);
                 } else {
                     // if selected one item then user will be able to start quick select
-                    if (imageSelectedList.contains(position)) {
-                        int index = imageSelectedList.indexOf(position);
-                        imageSelectedList.remove(index);
-                        imageView.setAlpha(1f);
-                    } else {
-                        imageSelectedList.add(position);
-                        imageView.setAlpha(0.5f);
-                    }
+                    setSelectedImage(imageView, position);
                 }
             }
         });
         imageView.setOnLongClickListener(v -> {
-            if (imageSelectedList.contains(position)) {
-                int index = imageSelectedList.indexOf(position);
-                imageSelectedList.remove(index);
-                imageView.setAlpha(1f);
-            } else {
-                imageSelectedList.add(position);
-                imageView.setAlpha(0.5f);
-            }
+            setSelectedImage(imageView, position);
             return true;
         });
 
         if (imageSelectedList.contains(position)) {
-            imageView.setAlpha(0.5f);
+            imageView.setPaintWidth(10);
+            imageView.setPaintColor(Color.argb(255, 0, 0, 0));
+            imageView.performAnimation(R.drawable.vd_image_selected);
         } else {
-            imageView.setAlpha(1f);
+            imageView.performAnimation(R.drawable.vd_image_selected_init);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(250);
+                    imageView.setPaintColor(Color.argb(0, 0, 0, 0));
+                    imageView.setPaintWidth(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
 
         Glide.with(context)
@@ -98,8 +99,33 @@ public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAd
         return imageDataList.size();
     }
 
+    private void setSelectedImage(MorphView view, int position) {
+        if (imageSelectedList.contains(position)) {
+            int index = imageSelectedList.indexOf(position);
+            imageSelectedList.remove(index);
+
+            view.performAnimation(R.drawable.vd_image_selected_init);
+            new Thread(() -> {
+                try {
+                    Thread.sleep(250);
+                    view.setPaintColor(Color.argb(0, 0, 0, 0));
+                    view.setPaintWidth(0);
+                    view.postInvalidate();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        } else {
+            imageSelectedList.add(position);
+
+            view.setPaintWidth(10);
+            view.setPaintColor(Color.argb(255, 0, 0, 0));
+            view.performAnimation(R.drawable.vd_image_selected);
+        }
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        private MorphView imageView;
 
         MyViewHolder(View view) {
             super(view);

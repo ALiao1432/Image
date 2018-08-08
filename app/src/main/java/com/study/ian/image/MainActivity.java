@@ -9,19 +9,15 @@ import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.ScaleGestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 
-import com.study.ian.image.view.MyRecyclerVIewAdapter;
+import com.study.ian.image.customview.MyRecyclerVIewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,7 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.study.ian.image.view.MyRecyclerVIewAdapter;
+import com.study.ian.image.customview.MyRecyclerVIewAdapter;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
