@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.ImageDetailActivity;
 import com.study.ian.image.R;
@@ -20,16 +17,16 @@ import com.study.ian.image.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyRecyclerVIewAdapter extends RecyclerView.Adapter<MyRecyclerVIewAdapter.MyViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MyViewHolder> {
 
-    private final String TAG = "MyRecyclerVIewAdapter";
+    private final String TAG = "MyRecyclerViewAdapter";
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
     private Context context;
     private List<ImageData> imageDataList;
     private List<Integer> imageSelectedList = new ArrayList<>();
 
-    public MyRecyclerVIewAdapter(Context context, List<ImageData> list) {
+    public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
         imageDataList = list;
     }
