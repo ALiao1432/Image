@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.ImageDetailActivity;
 import com.study.ian.image.R;
@@ -84,7 +85,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         Glide.with(context)
                 .load(imageDataList.get(position).getData())
-                .centerCrop()
+                .apply(new RequestOptions().centerCrop())
                 .into(imageView);
     }
 
