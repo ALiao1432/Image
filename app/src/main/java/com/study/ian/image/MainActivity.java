@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,13 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     private final int MY_WRITE_EXTERNAL_REQUEST_CODE = 999;
-    private SwipeRefreshLayout refreshLayout;
     private List<ImageData> imgPathList = new ArrayList<>();
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
     private ScaleGestureDetector scaleGestureDetector;
     private MyRecyclerViewAdapter myRecyclerViewAdapter;
-//    private ScanSdCardReceiver scanSdCardReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +54,25 @@ public class MainActivity extends AppCompatActivity {
                 || needToAskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showPermissionDialog();
         } else {
-//            long startTime = System.nanoTime();
             getAllImgFile();
-//            long totalTime = System.nanoTime() - startTime;
-//            imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
-//            Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
-//            Log.d(TAG, "total size : " + imgPathList.size());
 
             findView();
             initDetector();
             setRecyclerView();
-//            setRefreshLayout();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "!!!onRestart");
+        if (getAllImgFile()) {
+            myRecyclerViewAdapter.updateData(imgPathList);
         }
     }
 
     private void findView() {
         recyclerView = findViewById(R.id.recyclerView);
-//        refreshLayout = findViewById(R.id.refreshLayout);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -103,33 +104,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
     }
-
-//    private void setRefreshLayout() {
-//        refreshLayout.setOnRefreshListener(this::scanSdCard);
-//
-//        if (getAllImgFile()) {
-//            myRecyclerViewAdapter = new MyRecyclerViewAdapter(this, imgPathList);
-//            recyclerView.setAdapter(myRecyclerViewAdapter);
-//            refreshLayout.setRefreshing(false);
-//            imgPathList.forEach(imageData -> Log.d(TAG, "imageData : " + imageData));
-//        }
-//    }
-
-//    private void scanSdCard() {
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
-//        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        intentFilter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-//        intentFilter.addDataScheme("file");
-//
-//        scanSdCardReceiver = new ScanSdCardReceiver();
-//        registerReceiver(scanSdCardReceiver, intentFilter);
-//        sendBroadcast(new Intent(
-//                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-//                        Uri.parse("file://" + Environment.getExternalStorageDirectory().getAbsolutePath())
-//                )
-//        );
-//    }
 
     private void initDetector() {
         scaleGestureDetector = new ScaleGestureDetector(this, new RecyclerViewScaleDetector());
@@ -164,12 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_WRITE_EXTERNAL_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                long startTime = System.nanoTime();
                 getAllImgFile();
-//                long totalTime = System.nanoTime() - startTime;
-//                imgPathList.forEach(s -> Log.d(TAG, "imgData : " + s));
-//                Log.d(TAG, "totalTime : " + totalTime / 1000000 + " ms");
-//                Log.d(TAG, "total size : " + imgPathList.size());
 
                 findView();
                 setRecyclerView();
@@ -246,29 +215,4 @@ public class MainActivity extends AppCompatActivity {
             canScale = true;
         }
     }
-
-//    private class ScanSdCardReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//
-//            if (action != null) {
-//                switch (action) {
-//                    case Intent.ACTION_MEDIA_SCANNER_STARTED:
-//                        Log.d(TAG, "ACTION_MEDIA_SCANNER_STARTED!!!");
-//                        break;
-//                    case Intent.ACTION_MEDIA_SCANNER_FINISHED:
-//                        Log.d(TAG, "ACTION_MEDIA_SCANNER_FINISHED!!!");
-//                        break;
-//                    case Intent.ACTION_MEDIA_SCANNER_SCAN_FILE:
-//                        Log.d(TAG, "ACTION_MEDIA_SCANNER_SCAN_FILE!!!");
-//                        if (getAllImgFile()) {
-//                            myRecyclerViewAdapter.notifyDataSetChanged();
-//                            refreshLayout.setRefreshing(false);
-//                        }
-//                        break;
-//                }
-//            }
-//        }
-//    }
 }
