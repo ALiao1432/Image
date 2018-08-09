@@ -84,7 +84,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         Glide.with(context)
                 .load(imageDataList.get(position).getData())
-                .placeholder(R.color.colorNavigationBar)
                 .centerCrop()
                 .into(imageView);
     }
