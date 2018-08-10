@@ -3,15 +3,17 @@ package com.study.ian.image.customview;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.animation.LinearInterpolator;
+
+import com.study.ian.image.MainActivity;
 
 public class MorphView extends android.support.v7.widget.AppCompatImageView {
 
-    private static final String TAG = "XmlLabelParser";
+    private static final String TAG = "MorphView";
 
     private final SvgData svgData;
     private final Paint paint = new Paint();
@@ -35,6 +37,7 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(getWidth() / 10);
         paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeJoin(Paint.Join.ROUND);
     }
 
     private void initAnimator() {

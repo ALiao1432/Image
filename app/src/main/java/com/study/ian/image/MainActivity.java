@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        private final int maxSpanCount = 5;
+        private final int maxSpanCount = 4;
         private float currentScale;
         private boolean canScale = true;
 
