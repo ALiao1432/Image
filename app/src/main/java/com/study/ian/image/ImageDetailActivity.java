@@ -73,7 +73,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
             Glide.with(this)
                     .load(detailData[0])
-                    .apply(new RequestOptions().centerCrop())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -245,6 +244,23 @@ public class ImageDetailActivity extends AppCompatActivity {
                     break;
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float eventTime = e2.getEventTime() - e1.getEventTime();
+
+            if (currentScale == 1 && eventTime < 3000) {
+                if (Math.abs(velocityX) < 5000 && velocityY < -2500) {
+                    // swipe up
+                    ImageDetailActivity.this.finish();
+                } else if (Math.abs(velocityX) < 5000 && velocityY > 2500) {
+                    // swipe down
+                    ImageDetailActivity.this.finish();
+                }
+            }
+
+            return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
 }
