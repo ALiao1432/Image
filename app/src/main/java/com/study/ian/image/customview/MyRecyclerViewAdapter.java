@@ -84,7 +84,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         });
 
         if (imageSelectedList.contains(position)) {
-            imageView.setPaintWidth(imageView.getWidth() / 14);
             imageView.setPaintColor(Color.argb(255, 0, 0, 0));
             imageView.setCurrentId(R.drawable.vd_image_selected);
         } else {
@@ -104,14 +103,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     private void setSelectedImage(MorphView view, int position) {
         if (imageSelectedList.contains(position)) {
-            int index = imageSelectedList.indexOf(position);
-            imageSelectedList.remove(index);
+            imageSelectedList.remove(imageSelectedList.indexOf(position));
 
             view.clearPath();
         } else {
             imageSelectedList.add(position);
 
-            view.setPaintWidth(view.getWidth() / 14);
             view.setPaintColor(Color.argb(255, 0, 0, 0));
             view.setCurrentId(R.drawable.vd_image_selected);
         }

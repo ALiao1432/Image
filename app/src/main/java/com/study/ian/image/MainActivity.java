@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        private final int maxSpanCount = 6;
+        private final int maxSpanCount = 4;
         private float currentScale;
         private boolean canScale = true;
 
@@ -212,9 +212,13 @@ public class MainActivity extends AppCompatActivity {
             currentScale = detector.getScaleFactor();
 
             if (canScale && currentScale != 1) {
-                gridLayoutManager.setSpanCount(currentScale > 1 ? Math.max(gridLayoutManager.getSpanCount() - 1, 1) : Math.min(gridLayoutManager.getSpanCount() + 1, maxSpanCount));
-                myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
-
+                if (currentScale > 1) {
+                    gridLayoutManager.setSpanCount(Math.max(gridLayoutManager.getSpanCount() - 1, 1));
+                    myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
+                } else if ((currentScale < 1 && gridLayoutManager.getSpanCount() != 6)) {
+                    gridLayoutManager.setSpanCount(Math.min(gridLayoutManager.getSpanCount() + 1, maxSpanCount));
+                    myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
+                }
                 canScale = false;
             }
             return super.onScale(detector);

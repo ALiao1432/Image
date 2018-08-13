@@ -38,6 +38,7 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
 
     public void clearPath() {
         path.reset();
+        currentId = 0;
         postInvalidate();
     }
 
@@ -50,14 +51,14 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
         paint.setColor(color);
     }
 
-    public void setPaintWidth(int w) {
-        paint.setStrokeWidth(w);
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if (currentId != 0) {
+            paint.setStrokeWidth(getWidth() / 20);
+            path = svgData.getPath(currentId, this);
+        }
         canvas.drawPath(path, paint);
     }
 }
