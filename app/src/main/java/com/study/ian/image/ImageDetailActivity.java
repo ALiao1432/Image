@@ -70,39 +70,41 @@ public class ImageDetailActivity extends AppCompatActivity {
         if (bundle == null) {
             Log.d(TAG, "savedInstanceState is null");
         } else {
-            String[] detailData = bundle.getStringArray(MyRecyclerViewAdapter.CLICKED_IMG);
+            ImageData imageData = bundle.getParcelable(MyRecyclerViewAdapter.CLICKED_IMG);
 
-            Glide.with(this)
-                    .load(detailData[0])
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+            if (imageData != null) {
+                Glide.with(this)
+                        .load(imageData.getData())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            // set width and height after resource is ready
-                            DisplayMetrics displayMetrics = new DisplayMetrics();
-                            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-                            int screenWidth = displayMetrics.widthPixels;
-                            int screenHeight = displayMetrics.heightPixels;
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                // set width and height after resource is ready
+                                DisplayMetrics displayMetrics = new DisplayMetrics();
+                                getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+                                int screenWidth = displayMetrics.widthPixels;
+                                int screenHeight = displayMetrics.heightPixels;
 
-                            currentWidth = resource.getIntrinsicWidth();
-                            currentHeight = resource.getIntrinsicHeight();
-                            imageParameter = new ImageParameter(
-                                    currentWidth,
-                                    currentHeight,
-                                    screenWidth,
-                                    screenHeight
-                            );
-                            setView();
+                                currentWidth = resource.getIntrinsicWidth();
+                                currentHeight = resource.getIntrinsicHeight();
+                                imageParameter = new ImageParameter(
+                                        currentWidth,
+                                        currentHeight,
+                                        screenWidth,
+                                        screenHeight
+                                );
+                                cardView.getColorViaPalette(resource);
+                                setView();
+                                return false;
+                            }
+                        })
+                        .into(detailImageView);
 
-                            cardView.getColorViaPalette(resource);
-                            return false;
-                        }
-                    })
-                    .into(detailImageView);
+            }
         }
     }
 
@@ -159,12 +161,22 @@ public class ImageDetailActivity extends AppCompatActivity {
         dy = 0f;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (cardView.isOpen()) {
+            cardView.closeCardView();
+        } else {
+            ImageDetailActivity.this.finish();
+        }
+    }
+
     private class CusScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = Math.abs(detector.getScaleFactor());
-            float scale = (currentScale - 1f) * scaleFactor + scaleFactor;
+            float scale = currentScale * scaleFactor;
 
+            Log.d(TAG, "scaleFactor  : " + scaleFactor);
             if (scale >= .5f) {
                 detailImageView.setScaleX(scale);
                 detailImageView.setScaleY(scale);

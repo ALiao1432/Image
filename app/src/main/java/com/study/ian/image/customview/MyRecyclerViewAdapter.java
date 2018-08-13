@@ -69,7 +69,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     Intent intent = new Intent(context, ImageDetailActivity.class);
                     Bundle bundle = new Bundle();
 
-                    bundle.putStringArray(CLICKED_IMG, imageDataList.get(position).toArray());
+                    bundle.putParcelable(CLICKED_IMG, imageDataList.get(position));
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 } else {

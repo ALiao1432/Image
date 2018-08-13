@@ -12,10 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
+
+import com.study.ian.image.R;
 
 import java.util.List;
 
@@ -25,17 +27,48 @@ public class MyDetailCardView extends CardView {
 
     private final int ANIMATOR_DURATION = 350;
     private boolean isOpen = false;
+    private TextView countTextView;
+    private TextView nameTextView;
+    private TextView pathTextView;
+    private TextView sizeTextView;
+    private TextView widthTextView;
+    private TextView heightTextView;
+    private TextView dateAddTextView;
+    private int colorIndex = 1;
 
     public MyDetailCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
+        setCardView();
+    }
+
+    private void setCardView() {
         this.setVisibility(View.INVISIBLE);
         this.setRadius(75);
         this.setElevation(2);
-
         this.setOnClickListener(view -> {
 
         });
+    }
+
+    private void findView() {
+        countTextView = findViewById(R.id.countText);
+        nameTextView = findViewById(R.id.nameText);
+        pathTextView = findViewById(R.id.pathText);
+        sizeTextView = findViewById(R.id.sizeText);
+        widthTextView = findViewById(R.id.widthText);
+        heightTextView = findViewById(R.id.heightText);
+        dateAddTextView = findViewById(R.id.dateAddText);
+    }
+
+    private void setView(List<Palette.Swatch> swatchList) {
+        countTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
+        nameTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        pathTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        widthTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        heightTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        dateAddTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
     }
 
     @Override
@@ -88,9 +121,10 @@ public class MyDetailCardView extends CardView {
         Palette palette = Palette.from(bitmap).generate();
         List<Palette.Swatch> list = palette.getSwatches();
 
-        int index = 1;
+        this.setCardBackgroundColor(list.get(colorIndex).getRgb());
 
-        this.setCardBackgroundColor(list.get(index).getRgb());
+        findView();
+        setView(list);
     }
 
     public Bitmap drawableToBitmap(Drawable drawable) {

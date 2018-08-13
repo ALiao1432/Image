@@ -1,21 +1,60 @@
 package com.study.ian.image;
 
-public class ImageData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ImageData implements Parcelable{
 
     private String data;
     private String displayName;
-    private String dataAdd;
-    private String dateModified;
+    private String dateAdd;
+    private String size;
     private String width;
     private String height;
 
-    ImageData(String data, String displayName, String dataAdd, String dateModified, String width, String height) {
+    ImageData(String data, String displayName, String dateAdd, String size, String width, String height) {
         this.data = data;
         this.displayName = displayName;
-        this.dataAdd = dataAdd;
-        this.dateModified = dateModified;
+        this.dateAdd = dateAdd;
+        this.size = size;
         this.width = width;
         this.height = height;
+    }
+
+    protected ImageData(Parcel in) {
+        data = in.readString();
+        displayName = in.readString();
+        dateAdd = in.readString();
+        size = in.readString();
+        width = in.readString();
+        height = in.readString();
+    }
+
+    public static final Creator<ImageData> CREATOR = new Creator<ImageData>() {
+        @Override
+        public ImageData createFromParcel(Parcel in) {
+            return new ImageData(in);
+        }
+
+        @Override
+        public ImageData[] newArray(int size) {
+            return new ImageData[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(data);
+        dest.writeString(displayName);
+        dest.writeString(dateAdd);
+        dest.writeString(size);
+        dest.writeString(width);
+        dest.writeString(height);
     }
 
     public String getData() {
@@ -34,20 +73,20 @@ public class ImageData {
         this.displayName = displayName;
     }
 
-    public String getDataAdd() {
-        return dataAdd;
+    public String getDateAdd() {
+        return dateAdd;
     }
 
-    public void setDataAdd(String dataAdd) {
-        this.dataAdd = dataAdd;
+    public void setDateAdd(String dateAdd) {
+        this.dateAdd = dateAdd;
     }
 
-    public String getDateModified() {
-        return dateModified;
+    public String getsize() {
+        return size;
     }
 
-    public void setDateModified(String dateModified) {
-        this.dateModified = dateModified;
+    public void setsize(String dateModified) {
+        this.size = size;
     }
 
     public String getWidth() {
@@ -71,21 +110,10 @@ public class ImageData {
         return "ImageData{" +
                 "data='" + data + '\'' +
                 ", displayName='" + displayName + '\'' +
-                ", dataAdd='" + dataAdd + '\'' +
-                ", dateModified='" + dateModified + '\'' +
+                ", dateAdd='" + dateAdd + '\'' +
+                ", size='" + size + '\'' +
                 ", width='" + width + '\'' +
                 ", height='" + height + '\'' +
                 '}';
-    }
-
-    public String[] toArray() {
-        return new String[]{
-                getData(),
-                getDisplayName(),
-                getDataAdd(),
-                getDateModified(),
-                getWidth(),
-                getHeight()
-        };
     }
 }
