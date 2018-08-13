@@ -14,14 +14,14 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.study.ian.image.customview.MyDetailCardView;
 import com.study.ian.image.customview.MyRecyclerViewAdapter;
 
 public class ImageDetailActivity extends AppCompatActivity {
@@ -29,12 +29,13 @@ public class ImageDetailActivity extends AppCompatActivity {
     private final String TAG = "ImageDetailActivity";
 
     private ImageView detailImageView;
-    private LinearLayout linearLayout;
+    private RelativeLayout relativeLayout;
     private View decorView;
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
     private ValueAnimator scaleAnimator;
     private ImageParameter imageParameter;
+    private MyDetailCardView cardView;
     private int currentWidth;
     private int currentHeight;
     private float currentScale = 1f;
@@ -96,6 +97,8 @@ public class ImageDetailActivity extends AppCompatActivity {
                                     screenHeight
                             );
                             setView();
+
+                            cardView.getColorViaPalette(resource);
                             return false;
                         }
                     })
@@ -110,13 +113,14 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     private void findView() {
         decorView = getWindow().getDecorView();
-        linearLayout = findViewById(R.id.detailLinearLayout);
+        relativeLayout = findViewById(R.id.detailRelativeLayout);
         detailImageView = findViewById(R.id.detailImageView);
+        cardView = findViewById(R.id.detailCardView);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
-        linearLayout.setOnTouchListener((v, event) -> {
+        relativeLayout.setOnTouchListener((v, event) -> {
             scaleGestureDetector.onTouchEvent(event);
             gestureDetector.onTouchEvent(event);
             return true;
@@ -253,10 +257,16 @@ public class ImageDetailActivity extends AppCompatActivity {
             if (currentScale == 1 && eventTime < 3000) {
                 if (Math.abs(velocityX) < 5000 && velocityY < -2500) {
                     // swipe up
-                    ImageDetailActivity.this.finish();
+                    if (cardView.isOpen()) {
+                        cardView.closeCardView();
+                    } else {
+                        ImageDetailActivity.this.finish();
+                    }
                 } else if (Math.abs(velocityX) < 5000 && velocityY > 2500) {
                     // swipe down
-                    ImageDetailActivity.this.finish();
+                    if (!cardView.isOpen()) {
+                        cardView.openCardView();
+                    }
                 }
             }
 

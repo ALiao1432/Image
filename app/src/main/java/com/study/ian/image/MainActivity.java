@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
             currentScale = detector.getScaleFactor();
 
             if (canScale && currentScale != 1) {
-                if (currentScale > 1) {
+                if (currentScale > 1 && gridLayoutManager.getSpanCount() != 1) {
                     gridLayoutManager.setSpanCount(Math.max(gridLayoutManager.getSpanCount() - 1, 1));
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
                 } else if ((currentScale < 1 && gridLayoutManager.getSpanCount() != 6)) {
