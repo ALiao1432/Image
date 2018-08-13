@@ -98,12 +98,12 @@ public class ImageDetailActivity extends AppCompatActivity {
                                         screenHeight
                                 );
                                 cardView.getColorViaPalette(resource);
+                                cardView.setViewText(imageData);
                                 setView();
                                 return false;
                             }
                         })
                         .into(detailImageView);
-
             }
         }
     }
@@ -122,6 +122,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
+        // scaleGestureDetector need to use relativeLayout's event rather than detailImageView's event
         relativeLayout.setOnTouchListener((v, event) -> {
             scaleGestureDetector.onTouchEvent(event);
             gestureDetector.onTouchEvent(event);
@@ -176,7 +177,6 @@ public class ImageDetailActivity extends AppCompatActivity {
             float scaleFactor = Math.abs(detector.getScaleFactor());
             float scale = currentScale * scaleFactor;
 
-            Log.d(TAG, "scaleFactor  : " + scaleFactor);
             if (scale >= .5f) {
                 detailImageView.setScaleX(scale);
                 detailImageView.setScaleY(scale);

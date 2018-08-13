@@ -8,15 +8,15 @@ public class ImageData implements Parcelable{
     private String data;
     private String displayName;
     private String dateAdd;
-    private String size;
+    private String dataSize;
     private String width;
     private String height;
 
-    ImageData(String data, String displayName, String dateAdd, String size, String width, String height) {
+    ImageData(String data, String displayName, String dateAdd, String dataSize, String width, String height) {
         this.data = data;
         this.displayName = displayName;
         this.dateAdd = dateAdd;
-        this.size = size;
+        this.dataSize = dataSize;
         this.width = width;
         this.height = height;
     }
@@ -25,7 +25,7 @@ public class ImageData implements Parcelable{
         data = in.readString();
         displayName = in.readString();
         dateAdd = in.readString();
-        size = in.readString();
+        dataSize = in.readString();
         width = in.readString();
         height = in.readString();
     }
@@ -52,7 +52,7 @@ public class ImageData implements Parcelable{
         dest.writeString(data);
         dest.writeString(displayName);
         dest.writeString(dateAdd);
-        dest.writeString(size);
+        dest.writeString(dataSize);
         dest.writeString(width);
         dest.writeString(height);
     }
@@ -81,12 +81,12 @@ public class ImageData implements Parcelable{
         this.dateAdd = dateAdd;
     }
 
-    public String getsize() {
-        return size;
+    public String getDataSize() {
+        return dataSize;
     }
 
-    public void setsize(String dateModified) {
-        this.size = size;
+    public void setDataSize(String dataSize) {
+        this.dataSize = dataSize;
     }
 
     public String getWidth() {
@@ -111,7 +111,7 @@ public class ImageData implements Parcelable{
                 "data='" + data + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", dateAdd='" + dateAdd + '\'' +
-                ", size='" + size + '\'' +
+                ", dataSize='" + dataSize + '\'' +
                 ", width='" + width + '\'' +
                 ", height='" + height + '\'' +
                 '}';

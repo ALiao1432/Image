@@ -2,6 +2,7 @@ package com.study.ian.image.customview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,6 +18,7 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.study.ian.image.ImageData;
 import com.study.ian.image.R;
 
 import java.util.List;
@@ -27,13 +29,10 @@ public class MyDetailCardView extends CardView {
 
     private final int ANIMATOR_DURATION = 350;
     private boolean isOpen = false;
-    private TextView countTextView;
-    private TextView nameTextView;
+    private TextView infoTextView;
     private TextView pathTextView;
+    private TextView dataSizeTextView;
     private TextView sizeTextView;
-    private TextView widthTextView;
-    private TextView heightTextView;
-    private TextView dateAddTextView;
     private int colorIndex = 1;
 
     public MyDetailCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -42,40 +41,55 @@ public class MyDetailCardView extends CardView {
         setCardView();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setCardView() {
         this.setVisibility(View.INVISIBLE);
         this.setRadius(75);
         this.setElevation(2);
-        this.setOnClickListener(view -> {
-
+        this.setOnTouchListener((v, event) -> {
+            return false;
         });
     }
 
     private void findView() {
-        countTextView = findViewById(R.id.countText);
-        nameTextView = findViewById(R.id.nameText);
+        infoTextView = findViewById(R.id.infoText);
         pathTextView = findViewById(R.id.pathText);
+        dataSizeTextView = findViewById(R.id.dataSizeText);
         sizeTextView = findViewById(R.id.sizeText);
-        widthTextView = findViewById(R.id.widthText);
-        heightTextView = findViewById(R.id.heightText);
-        dateAddTextView = findViewById(R.id.dateAddText);
     }
 
     private void setView(List<Palette.Swatch> swatchList) {
-        countTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
-        nameTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        infoTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
         pathTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        dataSizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
-        widthTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
-        heightTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
-        dateAddTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void setViewText(ImageData imageData) {
+        long size = Long.valueOf(imageData.getDataSize());
+        float kBytes = size / 1000;
+        float MBytes = kBytes / 1000;
+        String tempSize;
+
+        if (MBytes > 1) {
+            tempSize = MBytes + " MB";
+        } else {
+            tempSize = kBytes + " kB";
+        }
+
+        infoTextView.setTextSize(24);
+
+        pathTextView.setText(imageData.getData());
+        sizeTextView.setText(imageData.getWidth() + " x " + imageData.getHeight());
+        dataSizeTextView.setText(tempSize);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = Math.round(MeasureSpec.getSize(widthMeasureSpec) * .75f);
+        int width = Math.round(MeasureSpec.getSize(widthMeasureSpec) * .8f);
         int height = Math.round(MeasureSpec.getSize(heightMeasureSpec) * .6f);
 
         setMeasuredDimension(width, height);
