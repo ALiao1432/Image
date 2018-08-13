@@ -39,6 +39,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyDataSetChanged();
     }
 
+    public boolean isAnySelected() {
+        return imageSelectedList.size() != 0;
+    }
+
+    public void clearSelected() {
+        imageSelectedList.clear();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

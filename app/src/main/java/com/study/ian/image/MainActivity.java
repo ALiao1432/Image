@@ -193,6 +193,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (myRecyclerViewAdapter.isAnySelected()) {
+            myRecyclerViewAdapter.clearSelected();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         private final int maxSpanCount = 4;
         private float currentScale;
