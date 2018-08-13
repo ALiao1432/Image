@@ -84,20 +84,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         });
 
         if (imageSelectedList.contains(position)) {
-            imageView.setPaintWidth(10);
+            imageView.setPaintWidth(imageView.getWidth() / 14);
             imageView.setPaintColor(Color.argb(255, 0, 0, 0));
-            imageView.performAnimation(R.drawable.vd_image_selected);
+            imageView.setCurrentId(R.drawable.vd_image_selected);
         } else {
-            imageView.performAnimation(R.drawable.vd_image_selected_init);
-            new Thread(() -> {
-                try {
-                    Thread.sleep(250);
-                    imageView.setPaintColor(Color.argb(0, 0, 0, 0));
-                    imageView.setPaintWidth(0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            imageView.clearPath();
         }
 
         Glide.with(context)
@@ -116,23 +107,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             int index = imageSelectedList.indexOf(position);
             imageSelectedList.remove(index);
 
-            view.performAnimation(R.drawable.vd_image_selected_init);
-            new Thread(() -> {
-                try {
-                    Thread.sleep(250);
-                    view.setPaintColor(Color.argb(0, 0, 0, 0));
-                    view.setPaintWidth(0);
-                    view.postInvalidate();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            view.clearPath();
         } else {
             imageSelectedList.add(position);
 
-            view.setPaintWidth(10);
+            view.setPaintWidth(view.getWidth() / 14);
             view.setPaintColor(Color.argb(255, 0, 0, 0));
-            view.performAnimation(R.drawable.vd_image_selected);
+            view.setCurrentId(R.drawable.vd_image_selected);
         }
     }
 

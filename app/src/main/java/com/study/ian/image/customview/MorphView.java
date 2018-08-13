@@ -1,15 +1,10 @@
 package com.study.ian.image.customview;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.animation.LinearInterpolator;
-
-import com.study.ian.image.MainActivity;
 
 public class MorphView extends android.support.v7.widget.AppCompatImageView {
 
@@ -18,9 +13,7 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
     private final SvgData svgData;
     private final Paint paint = new Paint();
     private DataPath path;
-    private ValueAnimator pointAnimator;
     private int currentId;
-
 
     @SuppressWarnings("ClickableViewAccessibility")
     MorphView(Context context, @Nullable AttributeSet attributeSet) {
@@ -29,29 +22,13 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
         svgData = new SvgData(context);
 
         initPaint();
-        initAnimator();
     }
 
     private void initPaint() {
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(getWidth() / 10);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
-    }
-
-    private void initAnimator() {
-        LinearInterpolator linearInterpolator = new LinearInterpolator();
-        final long animationDuration = 250;
-
-        pointAnimator = ValueAnimator.ofFloat(0, 1, 1.025f, 1.0125f, 1);
-        pointAnimator.setDuration(animationDuration);
-        pointAnimator.setInterpolator(linearInterpolator);
-        pointAnimator.addUpdateListener(valueAnimator -> {
-            path.reset();
-            path = svgData.getMorphPath((float) valueAnimator.getAnimatedValue());
-            invalidate();
-        });
     }
 
     private void initPath(int id) {
@@ -59,10 +36,9 @@ public class MorphView extends android.support.v7.widget.AppCompatImageView {
         currentId = id;
     }
 
-    public void performAnimation(int toId) {
-        svgData.setMorphRes(currentId, toId, this);
-        currentId = toId;
-        pointAnimator.start();
+    public void clearPath() {
+        path.reset();
+        postInvalidate();
     }
 
     public void setCurrentId(int id) {
