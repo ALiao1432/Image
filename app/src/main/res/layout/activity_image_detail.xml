@@ -58,6 +58,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sizeText" />
 
+            <LinearLayout
+                android:id="@+id/functionLinearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="27dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/closeImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:id="@+id/shareImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/vd_share" />
+
+                <ImageView
+                    android:id="@+id/deleteImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/vd_delete" />
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/closeImageView"
                 android:layout_width="wrap_content"
@@ -69,6 +94,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.559"
                 app:srcCompat="@drawable/vd_double_close" />
+
         </android.support.constraint.ConstraintLayout>
 
     </com.study.ian.image.customview.MyDetailCardView>

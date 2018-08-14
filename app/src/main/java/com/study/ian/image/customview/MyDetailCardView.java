@@ -41,6 +41,9 @@ public class MyDetailCardView extends CardView {
     private TextView dataSizeTextView;
     private TextView sizeTextView;
     private ImageView closeImageView;
+    private ImageView shareImageView;
+    private ImageView deleteImageView;
+
     private OnTouchListener onTouchListener = (v, e) -> {
         switch (v.getId()) {
             case R.id.closeImageView:
@@ -72,6 +75,8 @@ public class MyDetailCardView extends CardView {
         dataSizeTextView = findViewById(R.id.dataSizeText);
         sizeTextView = findViewById(R.id.sizeText);
         closeImageView = findViewById(R.id.closeImageView);
+        shareImageView = findViewById(R.id.shareImageView);
+        deleteImageView = findViewById(R.id.deleteImageView);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -83,6 +88,8 @@ public class MyDetailCardView extends CardView {
         dataSizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         closeImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
+        shareImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
+        deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
 
         closeImageView.setOnTouchListener(onTouchListener);
 //        closeImageView.setTouchDelegate();
