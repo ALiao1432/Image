@@ -16,6 +16,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -31,15 +32,26 @@ public class MyDetailCardView extends CardView {
 
     private final String TAG = "MyDetailCardView";
 
-    private final int ANIMATOR_DURATION = 350;
+    private final int ANIMATOR_DURATION = 300;
     private boolean isOpen = false;
+    private int colorIndex = 1;
     private ConstraintLayout constraintLayout;
     private TextView infoTextView;
     private TextView pathTextView;
     private TextView dataSizeTextView;
     private TextView sizeTextView;
     private ImageView closeImageView;
-    private int colorIndex = 1;
+    private OnTouchListener onTouchListener = (v, e) -> {
+        switch (v.getId()) {
+            case R.id.closeImageView:
+                if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                    closeCardView();
+                }
+                break;
+        }
+        v.performClick();
+        return true;
+    };
 
     public MyDetailCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -47,15 +59,10 @@ public class MyDetailCardView extends CardView {
         setCardView();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void setCardView() {
         this.setVisibility(View.INVISIBLE);
         this.setRadius(75);
         this.setElevation(2);
-        this.setOnTouchListener((v, event) -> {
-            Log.d(TAG, "MyDetailCardView setOnTouchListener");
-            return false;
-        });
     }
 
     private void findView() {
@@ -67,13 +74,22 @@ public class MyDetailCardView extends CardView {
         closeImageView = findViewById(R.id.closeImageView);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setView(List<Palette.Swatch> swatchList) {
         constraintLayout.measure(getWidth(), getHeight());
+
         infoTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
         pathTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         dataSizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         closeImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
+
+        closeImageView.setOnTouchListener(onTouchListener);
+//        closeImageView.setTouchDelegate();
+    }
+
+    public void setListenerParameter(View view, MotionEvent event) {
+        onTouchListener.onTouch(view, event);
     }
 
     @SuppressLint("SetTextI18n")

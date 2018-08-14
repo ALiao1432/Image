@@ -123,10 +123,13 @@ public class ImageDetailActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setView() {
         // scaleGestureDetector need to use relativeLayout's event rather than detailImageView's event
-        relativeLayout.setOnTouchListener((v, event) -> {
-            Log.d(TAG, "ImageDetailActivity setOnTouchListener");
-            scaleGestureDetector.onTouchEvent(event);
-            gestureDetector.onTouchEvent(event);
+        relativeLayout.setOnTouchListener((v, e) -> {
+            if (cardView.isOpen()) {
+                cardView.setListenerParameter(v, e);
+            } else {
+                scaleGestureDetector.onTouchEvent(e);
+                gestureDetector.onTouchEvent(e);
+            }
             return true;
         });
     }
