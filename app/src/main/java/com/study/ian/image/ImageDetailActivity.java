@@ -124,6 +124,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     private void setView() {
         // scaleGestureDetector need to use relativeLayout's event rather than detailImageView's event
         relativeLayout.setOnTouchListener((v, event) -> {
+            Log.d(TAG, "ImageDetailActivity setOnTouchListener");
             scaleGestureDetector.onTouchEvent(event);
             gestureDetector.onTouchEvent(event);
             return true;

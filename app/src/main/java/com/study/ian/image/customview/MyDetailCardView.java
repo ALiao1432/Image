@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,9 +14,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.study.ian.image.ImageData;
@@ -33,6 +36,7 @@ public class MyDetailCardView extends CardView {
     private TextView pathTextView;
     private TextView dataSizeTextView;
     private TextView sizeTextView;
+    private ImageView closeImageView;
     private int colorIndex = 1;
 
     public MyDetailCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -47,6 +51,7 @@ public class MyDetailCardView extends CardView {
         this.setRadius(75);
         this.setElevation(2);
         this.setOnTouchListener((v, event) -> {
+            Log.d(TAG, "MyDetailCardView setOnTouchListener");
             return false;
         });
     }
@@ -56,6 +61,7 @@ public class MyDetailCardView extends CardView {
         pathTextView = findViewById(R.id.pathText);
         dataSizeTextView = findViewById(R.id.dataSizeText);
         sizeTextView = findViewById(R.id.sizeText);
+        closeImageView = findViewById(R.id.closeImageView);
     }
 
     private void setView(List<Palette.Swatch> swatchList) {
@@ -63,6 +69,7 @@ public class MyDetailCardView extends CardView {
         pathTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         dataSizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
+        closeImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
     }
 
     @SuppressLint("SetTextI18n")
