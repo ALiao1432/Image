@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
@@ -32,6 +33,7 @@ public class MyDetailCardView extends CardView {
 
     private final int ANIMATOR_DURATION = 350;
     private boolean isOpen = false;
+    private ConstraintLayout constraintLayout;
     private TextView infoTextView;
     private TextView pathTextView;
     private TextView dataSizeTextView;
@@ -57,6 +59,7 @@ public class MyDetailCardView extends CardView {
     }
 
     private void findView() {
+        constraintLayout = findViewById(R.id.detailConstraintLayout);
         infoTextView = findViewById(R.id.infoText);
         pathTextView = findViewById(R.id.pathText);
         dataSizeTextView = findViewById(R.id.dataSizeText);
@@ -65,11 +68,12 @@ public class MyDetailCardView extends CardView {
     }
 
     private void setView(List<Palette.Swatch> swatchList) {
+        constraintLayout.measure(getWidth(), getHeight());
         infoTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
         pathTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         dataSizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
         sizeTextView.setTextColor(swatchList.get(colorIndex).getBodyTextColor());
-        closeImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
+        closeImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
     }
 
     @SuppressLint("SetTextI18n")
