@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -46,9 +47,15 @@ public class MyDetailCardView extends CardView {
 
     private OnTouchListener onTouchListener = (v, e) -> {
         switch (v.getId()) {
+            case R.id.shareImageView:
+
+                break;
+            case R.id.deleteImageView:
+
+                break;
             case R.id.closeImageView:
                 if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                    closeCardView();
+                        closeCardView();
                 }
                 break;
         }
@@ -92,7 +99,8 @@ public class MyDetailCardView extends CardView {
         deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
 
         closeImageView.setOnTouchListener(onTouchListener);
-//        closeImageView.setTouchDelegate();
+        shareImageView.setOnTouchListener(onTouchListener);
+        deleteImageView.setOnTouchListener(onTouchListener);
     }
 
     public void setListenerParameter(View view, MotionEvent event) {
