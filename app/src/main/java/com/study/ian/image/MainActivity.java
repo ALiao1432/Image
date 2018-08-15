@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Images.Media.DATE_ADDED,
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.WIDTH,
-                MediaStore.Images.Media.HEIGHT
+                MediaStore.Images.Media.HEIGHT,
+                MediaStore.Images.Media.MIME_TYPE
         };
         String order = MediaStore.Images.Media.DATE_MODIFIED + " DESC";
 
@@ -169,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
                             imageCursor.getString(2),
                             imageCursor.getString(3),
                             imageCursor.getString(4),
-                            imageCursor.getString(5)
+                            imageCursor.getString(5),
+                            imageCursor.getString(6)
                     ));
                 }
                 imageCursor.close();

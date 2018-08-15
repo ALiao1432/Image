@@ -4,15 +4,19 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
@@ -22,11 +26,14 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.study.ian.image.BuildConfig;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.R;
 
+import java.io.File;
 import java.util.List;
 
 public class MyDetailCardView extends CardView {
@@ -44,28 +51,41 @@ public class MyDetailCardView extends CardView {
     private ImageView closeImageView;
     private ImageView shareImageView;
     private ImageView deleteImageView;
+    private ImageData imageData;
+    private Context context;
 
+    @SuppressLint("ClickableViewAccessibility")
     private OnTouchListener onTouchListener = (v, e) -> {
         switch (v.getId()) {
             case R.id.shareImageView:
+                if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                    Intent shareIntent = new Intent();
+                    File file = new File(imageData.getData());
+                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
 
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    shareIntent.setType(imageData.getType());
+                    context.startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_to)));
+                }
                 break;
             case R.id.deleteImageView:
 
                 break;
             case R.id.closeImageView:
                 if (e.getActionMasked() == MotionEvent.ACTION_UP) {
-                        closeCardView();
+                    closeCardView();
                 }
                 break;
         }
-        v.performClick();
         return true;
     };
 
     public MyDetailCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
+        this.context = context;
         setCardView();
     }
 
@@ -109,6 +129,8 @@ public class MyDetailCardView extends CardView {
 
     @SuppressLint("SetTextI18n")
     public void setViewText(ImageData imageData) {
+        this.imageData = imageData;
+
         long size = Long.valueOf(imageData.getDataSize());
         float kBytes = size / 1000;
         float MBytes = kBytes / 1000;

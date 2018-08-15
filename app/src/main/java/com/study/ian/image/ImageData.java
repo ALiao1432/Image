@@ -11,14 +11,16 @@ public class ImageData implements Parcelable{
     private String dataSize;
     private String width;
     private String height;
+    private String type;
 
-    ImageData(String data, String displayName, String dateAdd, String dataSize, String width, String height) {
+    ImageData(String data, String displayName, String dateAdd, String dataSize, String width, String height, String type) {
         this.data = data;
         this.displayName = displayName;
         this.dateAdd = dateAdd;
         this.dataSize = dataSize;
         this.width = width;
         this.height = height;
+        this.type = type;
     }
 
     protected ImageData(Parcel in) {
@@ -28,6 +30,7 @@ public class ImageData implements Parcelable{
         dataSize = in.readString();
         width = in.readString();
         height = in.readString();
+        type = in.readString();
     }
 
     public static final Creator<ImageData> CREATOR = new Creator<ImageData>() {
@@ -55,6 +58,7 @@ public class ImageData implements Parcelable{
         dest.writeString(dataSize);
         dest.writeString(width);
         dest.writeString(height);
+        dest.writeString(type);
     }
 
     public String getData() {
@@ -105,15 +109,11 @@ public class ImageData implements Parcelable{
         this.height = height;
     }
 
-    @Override
-    public String toString() {
-        return "ImageData{" +
-                "data='" + data + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", dateAdd='" + dateAdd + '\'' +
-                ", dataSize='" + dataSize + '\'' +
-                ", width='" + width + '\'' +
-                ", height='" + height + '\'' +
-                '}';
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

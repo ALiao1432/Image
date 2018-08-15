@@ -99,7 +99,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                                 );
                                 cardView.getColorViaPalette(resource);
                                 cardView.setViewText(imageData);
-                                setView();
+                                setListener();
                                 return false;
                             }
                         })
@@ -121,7 +121,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setView() {
+    private void setListener() {
         // scaleGestureDetector need to use relativeLayout's event rather than detailImageView's event
         relativeLayout.setOnTouchListener((v, e) -> {
             if (cardView.isOpen()) {

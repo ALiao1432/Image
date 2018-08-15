@@ -5,4 +5,5 @@
     <string name="permission_dialog_accept">Accept</string>
     <string name="permission_dialog_cancel">Cancel</string>
     <string name="info_text">Information</string>
+    <string name="share_to">Share image to&#8230;</string>
 </resources>
