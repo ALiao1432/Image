@@ -53,12 +53,17 @@ public class MyDetailCardView extends CardView {
     private ImageView deleteImageView;
     private ImageData imageData;
     private Context context;
+    private List<Palette.Swatch> swatchList;
 
     @SuppressLint("ClickableViewAccessibility")
     private OnTouchListener onTouchListener = (v, e) -> {
         switch (v.getId()) {
             case R.id.shareImageView:
-                if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    shareImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
+                } else if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                    shareImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
+
                     Intent shareIntent = new Intent();
                     File file = new File(imageData.getData());
                     Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
@@ -71,7 +76,11 @@ public class MyDetailCardView extends CardView {
                 }
                 break;
             case R.id.deleteImageView:
-
+                if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
+                } else if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                    deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
+                }
                 break;
             case R.id.closeImageView:
                 if (e.getActionMasked() == MotionEvent.ACTION_UP) {
@@ -108,6 +117,8 @@ public class MyDetailCardView extends CardView {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setView(List<Palette.Swatch> swatchList) {
+        this.swatchList = swatchList;
+
         constraintLayout.measure(getWidth(), getHeight());
 
         infoTextView.setTextColor(swatchList.get(colorIndex).getTitleTextColor());
