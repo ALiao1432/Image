@@ -6,4 +6,7 @@
     <string name="permission_dialog_cancel">Cancel</string>
     <string name="info_text">Information</string>
     <string name="share_to">Share image to&#8230;</string>
+    <string name="confirm_dialog_title">Delete this image</string>
+    <string name="confirm_dialog_ok">OK</string>
+    <string name="confirm_dialog_no">No</string>
 </resources>

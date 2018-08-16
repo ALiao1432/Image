@@ -8,11 +8,10 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,17 +19,16 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.study.ian.image.BuildConfig;
 import com.study.ian.image.ImageData;
+import com.study.ian.image.MainActivity;
 import com.study.ian.image.R;
 
 import java.io.File;
@@ -63,16 +61,7 @@ public class MyDetailCardView extends CardView {
                     shareImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
                 } else if (e.getActionMasked() == MotionEvent.ACTION_UP) {
                     shareImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
-
-                    Intent shareIntent = new Intent();
-                    File file = new File(imageData.getData());
-                    Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
-
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    shareIntent.setType(imageData.getType());
-                    context.startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_to)));
+                    shareImage();
                 }
                 break;
             case R.id.deleteImageView:
@@ -80,6 +69,7 @@ public class MyDetailCardView extends CardView {
                     deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getTitleTextColor()));
                 } else if (e.getActionMasked() == MotionEvent.ACTION_UP) {
                     deleteImageView.setImageTintList(ColorStateList.valueOf(swatchList.get(colorIndex).getBodyTextColor()));
+                    showConfirmDialog();
                 }
                 break;
             case R.id.closeImageView:
@@ -236,5 +226,41 @@ public class MyDetailCardView extends CardView {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    private void showConfirmDialog() {
+        new android.support.v7.app.AlertDialog.Builder(context)
+                .setTitle(R.string.confirm_dialog_title)
+                .setPositiveButton(R.string.confirm_dialog_ok, (dialogInterface, i) -> deleteImage())
+                .setNegativeButton(R.string.confirm_dialog_no, (dialogInterface, i) -> {
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void shareImage() {
+        Intent shareIntent = new Intent();
+        File file = new File(imageData.getData());
+        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
+
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.setType(imageData.getType());
+        context.startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_to)));
+    }
+
+    private void deleteImage() {
+        File file = new File(imageData.getData());
+        String[] selectionArgs = new String[]{file.getPath()};
+        context.getContentResolver().delete(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Images.Media.DATA + "=?",
+                selectionArgs
+        );
+
+        Intent intent = new Intent();
+        intent.setClass(context, MainActivity.class);
+        context.startActivity(intent);
     }
 }
