@@ -2,6 +2,7 @@ package com.study.ian.image;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,8 +10,8 @@ import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import com.study.ian.image.customview.MyCardView;
 import com.study.ian.image.customview.MyRecyclerViewAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
 
     private final int MY_WRITE_EXTERNAL_REQUEST_CODE = 999;
     private List<ImageData> imgPathList = new ArrayList<>();
+    private List<Integer> selectedList = new ArrayList<>();
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
     private ScaleGestureDetector scaleGestureDetector;
@@ -91,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
-        // TODO: 2018-07-30 ViewPager
-
         // set onTouchListener for recyclerView
         recyclerView.setOnTouchListener((v, event) -> {
             Log.d(TAG, "recyclerView.setOnTouchListener");
@@ -114,13 +115,9 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
             }
         });
 
-        shareButton.setOnClickListener(v -> {
-            Log.d(TAG, "shareButton.setOnClickListener");
-        });
+        shareButton.setOnClickListener(v -> shareImage());
 
-        deleteButton.setOnClickListener(v -> {
-            Log.d(TAG, "deleteButton.setOnClickListener");
-        });
+        deleteButton.setOnClickListener(v -> showConfirmDialog());
     }
 
     private void initDetector() {
@@ -225,12 +222,60 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
 
     @Override
     public void onSelectedListener(List<Integer> selectedList) {
+        this.selectedList = selectedList;
+
         if (selectedList.size() == 0) {
-            Log.d(TAG, "actionCardView.closeCardView");
             actionCardView.closeCardView();
-        } else if (!actionCardView.isOpen()){
+        } else if (!actionCardView.isOpen()) {
             actionCardView.openCardView();
         }
+    }
+
+    private void shareImage() {
+        Intent shareIntent = new Intent();
+        ArrayList<Uri> uriArrayList = new ArrayList<>();
+        String type = imgPathList.get(selectedList.get(0)).getType();
+
+        selectedList.forEach(i -> {
+            File file = new File(imgPathList.get(i).getData());
+            Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+            uriArrayList.add(uri);
+        });
+
+        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uriArrayList);
+        shareIntent.setType(type);
+        startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.share_to)));
+
+        myRecyclerViewAdapter.clearSelected();
+    }
+
+    private void deleteImage() {
+        selectedList.forEach(i -> {
+            File file = new File(imgPathList.get(i).getData());
+            String[] selectionArgs = new String[]{file.getPath()};
+            getContentResolver().delete(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.DATA + "=?",
+                    selectionArgs
+            );
+        });
+
+        if (getAllImgFile()) {
+            myRecyclerViewAdapter.updateData(imgPathList);
+        }
+        myRecyclerViewAdapter.clearSelected();
+    }
+
+    private void showConfirmDialog() {
+        new android.support.v7.app.AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_dialog_title)
+                .setPositiveButton(R.string.confirm_dialog_ok, (dialogInterface, i) -> deleteImage())
+                .setNegativeButton(R.string.confirm_dialog_no, (dialogInterface, i) -> {
+                })
+                .setCancelable(false)
+                .show();
     }
 
     private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
