@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +17,20 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ScaleGestureDetector;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
 
+import com.study.ian.image.customview.MyCardView;
 import com.study.ian.image.customview.MyRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO: 2018-07-26 add floating button if selected any img
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnSelectedItemCallback {
 
     private final String TAG = "MainActivity";
 
@@ -36,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager gridLayoutManager;
     private ScaleGestureDetector scaleGestureDetector;
     private MyRecyclerViewAdapter myRecyclerViewAdapter;
+    private MyCardView actionCardView;
+    private Button shareButton;
+    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
             findView();
             initDetector();
-            setRecyclerView();
+            initView();
         }
     }
 
@@ -64,10 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void findView() {
         recyclerView = findViewById(R.id.recyclerView);
+        actionCardView = findViewById(R.id.actionCardView);
+        shareButton = actionCardView.findViewById(R.id.shareButton);
+        deleteButton = actionCardView.findViewById(R.id.deleteButton);
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setRecyclerView() {
+    private void initView() {
         // set Layout Manager
         gridLayoutManager = new GridLayoutManager(this, 2);
         gridLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -81,18 +91,35 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
-        // add floating button
-        // TODO: 2018-07-27 study FloatingActionButton
-
         // TODO: 2018-07-30 ViewPager
 
         // set onTouchListener for recyclerView
         recyclerView.setOnTouchListener((v, event) -> {
+            Log.d(TAG, "recyclerView.setOnTouchListener");
             if (event.getPointerCount() == 2) {
                 scaleGestureDetector.onTouchEvent(event);
                 return true;
             }
             return false;
+        });
+
+        actionCardView.setVisibility(View.INVISIBLE);
+        actionCardView.ANIMATOR_DURATION = 200;
+        actionCardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                actionCardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                actionCardView.cx = actionCardView.getWidth();
+                actionCardView.cy = actionCardView.getHeight();
+            }
+        });
+
+        shareButton.setOnClickListener(v -> {
+            Log.d(TAG, "shareButton.setOnClickListener");
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            Log.d(TAG, "deleteButton.setOnClickListener");
         });
     }
 
@@ -132,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 getAllImgFile();
 
                 findView();
-                setRecyclerView();
+                initView();
             } else {
                 finish();
             }
@@ -193,6 +220,16 @@ public class MainActivity extends AppCompatActivity {
             myRecyclerViewAdapter.clearSelected();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onSelectedListener(List<Integer> selectedList) {
+        if (selectedList.size() == 0) {
+            Log.d(TAG, "actionCardView.closeCardView");
+            actionCardView.closeCardView();
+        } else if (!actionCardView.isOpen()){
+            actionCardView.openCardView();
         }
     }
 

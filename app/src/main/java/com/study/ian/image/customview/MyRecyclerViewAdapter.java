@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.ImageDetailActivity;
+import com.study.ian.image.OnSelectedItemCallback;
 import com.study.ian.image.R;
 
 import java.util.ArrayList;
@@ -28,10 +28,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private Context context;
     private List<ImageData> imageDataList;
     private List<Integer> imageSelectedList = new ArrayList<>();
+    private OnSelectedItemCallback onSelectedItemCallback;
 
     public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
         imageDataList = list;
+        onSelectedItemCallback = (OnSelectedItemCallback) context;
     }
 
     public void updateData(List<ImageData> imageDataList) {
@@ -45,6 +47,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     public void clearSelected() {
         imageSelectedList.clear();
+        onSelectedItemCallback.onSelectedListener(imageSelectedList);
         notifyDataSetChanged();
     }
 
@@ -112,6 +115,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             view.setPaintColor(Color.argb(255, 0, 0, 0));
             view.setCurrentId(R.drawable.vd_image_selected);
         }
+        onSelectedItemCallback.onSelectedListener(imageSelectedList);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

@@ -34,12 +34,10 @@ import com.study.ian.image.R;
 import java.io.File;
 import java.util.List;
 
-public class MyDetailCardView extends CardView {
+public class MyDetailCardView extends MyCardView {
 
     private final String TAG = "MyDetailCardView";
 
-    private final int ANIMATOR_DURATION = 300;
-    private boolean isOpen = false;
     private int colorIndex = 1;
     private ConstraintLayout constraintLayout;
     private TextView infoTextView;
@@ -85,13 +83,15 @@ public class MyDetailCardView extends CardView {
         super(context, attrs);
 
         this.context = context;
-        setCardView();
     }
 
     private void setCardView() {
-        this.setVisibility(View.INVISIBLE);
-        this.setRadius(75);
-        this.setElevation(2);
+        setVisibility(View.INVISIBLE);
+        setRadius(75);
+        setElevation(2);
+
+        this.cx = getWidth() / 2;
+        this.cy = 0;
     }
 
     private void findView() {
@@ -158,41 +158,7 @@ public class MyDetailCardView extends CardView {
         int height = Math.round(MeasureSpec.getSize(heightMeasureSpec) * .6f);
 
         setMeasuredDimension(width, height);
-    }
-
-    public void openCardView() {
-        int cx = getWidth() / 2;
-        int cy = 0;
-        float finalRadius = (float) Math.hypot(getWidth(), getHeight());
-
-        Animator animator = ViewAnimationUtils.createCircularReveal(this, cx, cy, 0, finalRadius);
-        animator.setDuration(ANIMATOR_DURATION);
-        animator.setInterpolator(new DecelerateInterpolator());
-        this.setVisibility(View.VISIBLE);
-        animator.start();
-        isOpen = true;
-    }
-
-    public void closeCardView() {
-        int cx = getWidth() / 2;
-        int cy = 0;
-        float finalRadius = (float) Math.hypot(getWidth(), getHeight());
-
-        Animator animator = ViewAnimationUtils.createCircularReveal(this, cx, cy, finalRadius, 0);
-        animator.setDuration(ANIMATOR_DURATION);
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                MyDetailCardView.this.setVisibility(View.INVISIBLE);
-            }
-        });
-        animator.start();
-        isOpen = false;
-    }
-
-    public boolean isOpen() {
-        return isOpen;
+        setCardView();
     }
 
     public void getColorViaPalette(Drawable drawable) {

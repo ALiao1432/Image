@@ -9,4 +9,6 @@
     <string name="confirm_dialog_title">Delete this image</string>
     <string name="confirm_dialog_ok">OK</string>
     <string name="confirm_dialog_no">No</string>
+    <string name="delete_button">Delete</string>
+    <string name="share_button">Share</string>
 </resources>
