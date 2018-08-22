@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
 
         // set onTouchListener for recyclerView
         recyclerView.setOnTouchListener((v, event) -> {
-            Log.d(TAG, "recyclerView.setOnTouchListener");
             if (event.getPointerCount() == 2) {
                 scaleGestureDetector.onTouchEvent(event);
                 return true;
@@ -153,10 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
 
         if (requestCode == MY_WRITE_EXTERNAL_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getAllImgFile();
-
-                findView();
-                initView();
+                recreate();
             } else {
                 finish();
             }
