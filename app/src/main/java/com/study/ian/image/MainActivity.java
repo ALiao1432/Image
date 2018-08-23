@@ -18,10 +18,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 
 import com.study.ian.image.customview.MyCardView;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
     private GridLayoutManager gridLayoutManager;
     private ScaleGestureDetector scaleGestureDetector;
     private MyRecyclerViewAdapter myRecyclerViewAdapter;
+    private LayoutAnimationController controller;
     private MyCardView actionCardView;
     private Button shareButton;
     private Button deleteButton;
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
         super.onRestart();
         if (getAllImgFile()) {
             myRecyclerViewAdapter.updateData(imgPathList);
+            recyclerView.scheduleLayoutAnimation();
         }
     }
 
@@ -103,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
             return false;
         });
 
+        // set animation
+        setRecyclerViewAnimation();
+
         actionCardView.setVisibility(View.INVISIBLE);
         actionCardView.ANIMATOR_DURATION = 200;
         actionCardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -117,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
         shareButton.setOnClickListener(v -> shareImage());
 
         deleteButton.setOnClickListener(v -> showConfirmDialog());
+    }
+
+    private void setRecyclerViewAnimation() {
+        controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_up_2);
+        recyclerView.setLayoutAnimation(controller);
+        myRecyclerViewAdapter.notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void initDetector() {
@@ -274,6 +287,24 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
                 .show();
     }
 
+    private void setLayoutAnimationResource(int spanCount) {
+        switch (spanCount) {
+            case 1:
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_up_1);
+                break;
+            case 2:
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_up_2);
+                break;
+            case 3:
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_up_3);
+                break;
+            case 4:
+                controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_up_4);
+                break;
+        }
+        recyclerView.setLayoutAnimation(controller);
+    }
+
     private class RecyclerViewScaleDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         private final int maxSpanCount = 4;
         private float currentScale;
@@ -286,9 +317,11 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
             if (canScale && currentScale != 1) {
                 if (currentScale > 1 && gridLayoutManager.getSpanCount() != 1) {
                     gridLayoutManager.setSpanCount(Math.max(gridLayoutManager.getSpanCount() - 1, 1));
+                    setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
                 } else if ((currentScale < 1 && gridLayoutManager.getSpanCount() != maxSpanCount)) {
                     gridLayoutManager.setSpanCount(Math.min(gridLayoutManager.getSpanCount() + 1, maxSpanCount));
+                    setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
                 }
                 canScale = false;

@@ -86,9 +86,6 @@ public class MyDetailCardView extends MyCardView {
     }
 
     private void setCardView() {
-//        setRadius(75);
-//        setElevation(2);
-
         this.cx = getWidth() / 2;
         this.cy = 0;
     }
