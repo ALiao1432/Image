@@ -52,4 +52,18 @@ public class ImageParameter {
     public boolean isBottomOutside() {
         return bottom > screenHeight;
     }
+
+    @Override
+    public String toString() {
+        return "ImageParameter{" +
+                "width=" + width +
+                ", height=" + height +
+                ", screenWidth=" + screenWidth +
+                ", screenHeight=" + screenHeight +
+                ", left=" + left +
+                ", right=" + right +
+                ", top=" + top +
+                ", bottom=" + bottom +
+                '}';
+    }
 }

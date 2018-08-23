@@ -1,5 +1,7 @@
 package com.study.ian.image;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -12,6 +14,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,7 +37,6 @@ public class ImageDetailActivity extends AppCompatActivity {
     private View decorView;
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
-    private ValueAnimator scaleAnimator;
     private ImageParameter imageParameter;
     private MyDetailCardView cardView;
     private int currentWidth;
@@ -59,9 +62,8 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         scaleGestureDetector = new ScaleGestureDetector(this, new CusScaleGestureListener());
         gestureDetector = new GestureDetector(this, new CusGestureListener());
-        scaleAnimator = new ValueAnimator();
 
-        initValueAnimator();
+
         findView();
     }
 
@@ -108,11 +110,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void initValueAnimator() {
-        scaleAnimator.setDuration(120);
-        scaleAnimator.setInterpolator(new LinearInterpolator());
-    }
-
     private void findView() {
         decorView = getWindow().getDecorView();
         relativeLayout = findViewById(R.id.detailRelativeLayout);
@@ -147,20 +144,60 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     private void scaleImageWithAnimation(float fromScale, float toScale) {
+        ValueAnimator scaleAnimator = new ValueAnimator();
+        scaleAnimator.setDuration(120);
+        scaleAnimator.setInterpolator(new LinearInterpolator());
         scaleAnimator.setFloatValues(fromScale, toScale);
         scaleAnimator.addUpdateListener(valueAnimator -> {
             detailImageView.setScaleX((float) valueAnimator.getAnimatedValue());
             detailImageView.setScaleY((float) valueAnimator.getAnimatedValue());
         });
         scaleAnimator.start();
+
         currentScale = toScale;
         currentWidth = (int) (imageParameter.getWidth() * toScale);
         currentHeight = (int) (imageParameter.getHeight() * toScale);
     }
 
-    private void setImageToOriginPosition() {
-        detailImageView.setTranslationX(0);
-        detailImageView.setTranslationY(0);
+    private void setImageToOrigin() {
+        long animationDuration = 200;
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        ObjectAnimator translationAnimatorX = ObjectAnimator.ofFloat(
+                detailImageView,
+                "translationX",
+                detailImageView.getTranslationX(),
+                0.0f
+        ).setDuration(animationDuration);
+        translationAnimatorX.setInterpolator(new AccelerateInterpolator());
+
+        ObjectAnimator translationAnimatorY = ObjectAnimator.ofFloat(
+                detailImageView,
+                "translationY",
+                detailImageView.getTranslationY(),
+                0.0f
+        ).setDuration(animationDuration);
+        translationAnimatorY.setInterpolator(new DecelerateInterpolator());
+
+        if (detailImageView.getScaleX() != 1) {
+            ValueAnimator scaleAnimator = new ValueAnimator();
+            scaleAnimator.setDuration(animationDuration);
+            scaleAnimator.setInterpolator(new LinearInterpolator());
+            scaleAnimator.setFloatValues(detailImageView.getScaleX(), 1f);
+            scaleAnimator.addUpdateListener(valueAnimator -> {
+                detailImageView.setScaleX((float) valueAnimator.getAnimatedValue());
+                detailImageView.setScaleY((float) valueAnimator.getAnimatedValue());
+            });
+
+            animatorSet.play(scaleAnimator)
+                    .with(translationAnimatorX)
+                    .with(translationAnimatorY);
+            animatorSet.start();
+        } else {
+            animatorSet.play(translationAnimatorX)
+                    .with(translationAnimatorY);
+            animatorSet.start();
+        }
 
         dx = 0f;
         dy = 0f;
@@ -196,7 +233,7 @@ public class ImageDetailActivity extends AppCompatActivity {
                 ImageDetailActivity.this.finish();
             } else if (currentScale < 1f) {
                 scaleImageWithAnimation(currentScale, 1f);
-                setImageToOriginPosition();
+                setImageToOrigin();
                 currentScale = 1f;
             } else {
                 currentWidth = (int) (currentScale * imageParameter.getWidth());
@@ -215,13 +252,11 @@ public class ImageDetailActivity extends AppCompatActivity {
     private class CusGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            float currentScale = detailImageView.getScaleX();
-
             if (currentScale != 1f) {
                 scaleImageWithAnimation(currentScale, 1f);
-                setImageToOriginPosition();
+                setImageToOrigin();
             } else if (dx != 0 || dy != 0) {
-                setImageToOriginPosition();
+                setImageToOrigin();
             } else {
                 scaleImageWithAnimation(1f, 2.5f);
             }
@@ -237,7 +272,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            switch (e2.getAction()) {
+            switch (e2.getActionMasked()) {
                 case MotionEvent.ACTION_MOVE:
                     if ((imageParameter.isLeftOutside() && distanceX < 0)
                             || (imageParameter.isRightOutside() && distanceX > 0)) {
@@ -261,6 +296,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                                 (int) detailImageView.getTranslationY()
                         );
                     }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.d(TAG, "MotionEvent.ACTION_UP : " + imageParameter);
                     break;
             }
             return super.onScroll(e1, e2, distanceX, distanceY);
