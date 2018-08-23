@@ -86,9 +86,8 @@ public class MyDetailCardView extends MyCardView {
     }
 
     private void setCardView() {
-        setVisibility(View.INVISIBLE);
-        setRadius(75);
-        setElevation(2);
+//        setRadius(75);
+//        setElevation(2);
 
         this.cx = getWidth() / 2;
         this.cy = 0;

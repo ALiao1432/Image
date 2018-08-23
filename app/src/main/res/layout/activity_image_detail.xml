@@ -12,8 +12,11 @@
         android:id="@+id/detailCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="2dp">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/detailConstraintLayout"
@@ -35,8 +38,8 @@
                 android:id="@+id/pathText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textIsSelectable="true"
                 android:layout_marginTop="32dp"
+                android:textIsSelectable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/infoText" />
 
