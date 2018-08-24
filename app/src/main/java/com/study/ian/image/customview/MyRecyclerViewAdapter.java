@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -26,9 +27,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
     private final Context context;
-    private List<ImageData> imageDataList;
     private final List<Integer> imageSelectedList = new ArrayList<>();
     private final OnSelectedItemCallback onSelectedItemCallback;
+    private List<ImageData> imageDataList;
+    private int recyclerViewSpanCount = 2;
 
     public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
@@ -51,6 +53,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyDataSetChanged();
     }
 
+    public void setRecyclerViewSpanCount(int spanCount) {
+        this.recyclerViewSpanCount = spanCount;
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -63,6 +69,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         MorphView imageView = holder.imageView;
         imageView.setPaintColor(Color.argb(0, 0, 0, 0));
         imageView.setCurrentId(R.drawable.vd_image_selected_init);
+
+        switch (recyclerViewSpanCount) {
+            case 1:
+                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_1));
+                break;
+            case 2:
+                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_2));
+                break;
+            case 3:
+                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_3));
+                break;
+            case 4:
+                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_4));
+                break;
+        }
 
         // add listener for imageView
         imageView.setOnClickListener(v -> {

@@ -319,10 +319,12 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
                     gridLayoutManager.setSpanCount(Math.max(gridLayoutManager.getSpanCount() - 1, 1));
                     setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
+                    myRecyclerViewAdapter.setRecyclerViewSpanCount(gridLayoutManager.getSpanCount());
                 } else if ((currentScale < 1 && gridLayoutManager.getSpanCount() != maxSpanCount)) {
                     gridLayoutManager.setSpanCount(Math.min(gridLayoutManager.getSpanCount() + 1, maxSpanCount));
                     setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
+                    myRecyclerViewAdapter.setRecyclerViewSpanCount(gridLayoutManager.getSpanCount());
                 }
                 canScale = false;
             }
