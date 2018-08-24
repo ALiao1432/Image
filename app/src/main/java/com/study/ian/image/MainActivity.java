@@ -18,6 +18,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -97,13 +98,26 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
-        // set onTouchListener for recyclerView
         recyclerView.setOnTouchListener((v, event) -> {
             if (event.getPointerCount() == 2) {
                 scaleGestureDetector.onTouchEvent(event);
                 return true;
             }
             return false;
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    // scroll down
+                    myRecyclerViewAdapter.setViewScrollDown(true);
+                } else {
+                    // scroll up
+                    myRecyclerViewAdapter.setViewScrollDown(false);
+                }
+            }
         });
 
         // set animation
@@ -319,12 +333,10 @@ public class MainActivity extends AppCompatActivity implements OnSelectedItemCal
                     gridLayoutManager.setSpanCount(Math.max(gridLayoutManager.getSpanCount() - 1, 1));
                     setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
-                    myRecyclerViewAdapter.setRecyclerViewSpanCount(gridLayoutManager.getSpanCount());
                 } else if ((currentScale < 1 && gridLayoutManager.getSpanCount() != maxSpanCount)) {
                     gridLayoutManager.setSpanCount(Math.min(gridLayoutManager.getSpanCount() + 1, maxSpanCount));
                     setLayoutAnimationResource(gridLayoutManager.getSpanCount());
                     myRecyclerViewAdapter.notifyItemChanged(0); // i don't know why...
-                    myRecyclerViewAdapter.setRecyclerViewSpanCount(gridLayoutManager.getSpanCount());
                 }
                 canScale = false;
             }

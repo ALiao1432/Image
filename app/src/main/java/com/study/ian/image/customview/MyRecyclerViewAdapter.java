@@ -30,7 +30,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private final List<Integer> imageSelectedList = new ArrayList<>();
     private final OnSelectedItemCallback onSelectedItemCallback;
     private List<ImageData> imageDataList;
-    private int recyclerViewSpanCount = 2;
+    private boolean isViewScrollDown = true;
 
     public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
@@ -53,8 +53,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         notifyDataSetChanged();
     }
 
-    public void setRecyclerViewSpanCount(int spanCount) {
-        this.recyclerViewSpanCount = spanCount;
+    public void setViewScrollDown(boolean scrollDown) {
+        this.isViewScrollDown = scrollDown;
     }
 
     @NonNull
@@ -69,20 +69,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         MorphView imageView = holder.imageView;
         imageView.setPaintColor(Color.argb(0, 0, 0, 0));
         imageView.setCurrentId(R.drawable.vd_image_selected_init);
-
-        switch (recyclerViewSpanCount) {
-            case 1:
-                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_1));
-                break;
-            case 2:
-                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_2));
-                break;
-            case 3:
-                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_3));
-                break;
-            case 4:
-                imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_4));
-                break;
+        if (isViewScrollDown) {
+            imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_2));
         }
 
         // add listener for imageView
