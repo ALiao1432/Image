@@ -25,10 +25,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private final String TAG = "MyRecyclerViewAdapter";
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
-    private Context context;
+    private final Context context;
     private List<ImageData> imageDataList;
-    private List<Integer> imageSelectedList = new ArrayList<>();
-    private OnSelectedItemCallback onSelectedItemCallback;
+    private final List<Integer> imageSelectedList = new ArrayList<>();
+    private final OnSelectedItemCallback onSelectedItemCallback;
 
     public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
@@ -119,7 +119,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private MorphView imageView;
+        private final MorphView imageView;
 
         MyViewHolder(View view) {
             super(view);

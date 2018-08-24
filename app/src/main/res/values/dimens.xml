@@ -5,8 +5,8 @@
     <dimen name="close_icon_width">40dp</dimen>
     <dimen name="close_icon_height">40dp</dimen>
 
-    <integer name="animation_duration_1">420</integer>
-    <integer name="animation_duration_2">300</integer>
-    <integer name="animation_duration_3">180</integer>
-    <integer name="animation_duration_4">120</integer>
+    <integer name="animation_duration_1">300</integer>
+    <integer name="animation_duration_2">240</integer>
+    <integer name="animation_duration_3">160</integer>
+    <integer name="animation_duration_4">100</integer>
 </resources>

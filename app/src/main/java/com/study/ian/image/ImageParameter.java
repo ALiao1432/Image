@@ -1,15 +1,13 @@
 package com.study.ian.image;
 
-import android.util.Log;
-
-public class ImageParameter {
+class ImageParameter {
 
     private final String TAG = "ImageParameter";
 
-    private int width;
-    private int height;
-    private int screenWidth;
-    private int screenHeight;
+    private final int width;
+    private final int height;
+    private final int screenWidth;
+    private final int screenHeight;
     private int left;
     private int right;
     private int top;

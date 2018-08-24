@@ -23,7 +23,7 @@ public class ImageData implements Parcelable{
         this.type = type;
     }
 
-    protected ImageData(Parcel in) {
+    private ImageData(Parcel in) {
         data = in.readString();
         displayName = in.readString();
         dateAdd = in.readString();

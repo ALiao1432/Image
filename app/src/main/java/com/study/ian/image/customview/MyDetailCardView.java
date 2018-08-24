@@ -1,7 +1,5 @@
 package com.study.ian.image.customview;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,7 +33,7 @@ public class MyDetailCardView extends MyCardView {
 
     private final String TAG = "MyDetailCardView";
 
-    private int colorIndex = 1;
+    private final int colorIndex = 1;
     private ConstraintLayout constraintLayout;
     private TextView infoTextView;
     private TextView pathTextView;
@@ -48,11 +43,11 @@ public class MyDetailCardView extends MyCardView {
     private ImageView shareImageView;
     private ImageView deleteImageView;
     private ImageData imageData;
-    private Context context;
+    private final Context context;
     private List<Palette.Swatch> swatchList;
 
     @SuppressLint("ClickableViewAccessibility")
-    private OnTouchListener onTouchListener = (v, e) -> {
+    private final OnTouchListener onTouchListener = (v, e) -> {
         switch (v.getId()) {
             case R.id.shareImageView:
                 if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
@@ -168,7 +163,7 @@ public class MyDetailCardView extends MyCardView {
         setView(list);
     }
 
-    public Bitmap drawableToBitmap(Drawable drawable) {
+    private Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap;
 
         if (drawable instanceof BitmapDrawable) {
