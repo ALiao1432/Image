@@ -6,5 +6,6 @@
     <com.study.ian.image.customview.MorphView
         android:id="@+id/imageHolderView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:transitionName="@string/image_transition_name" />
 </com.study.ian.image.MyLinearLayout>

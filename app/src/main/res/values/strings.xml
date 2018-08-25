@@ -11,4 +11,5 @@
     <string name="confirm_dialog_no">No</string>
     <string name="delete_button">Delete</string>
     <string name="share_button">Share</string>
+    <string name="image_transition_name">MyImage</string>
 </resources>

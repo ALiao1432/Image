@@ -1,10 +1,13 @@
 package com.study.ian.image.customview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.ImageDetailActivity;
+import com.study.ian.image.MainActivity;
 import com.study.ian.image.OnSelectedItemCallback;
 import com.study.ian.image.R;
 
@@ -26,16 +30,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private final String TAG = "MyRecyclerViewAdapter";
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
-    private final Context context;
+    private final Activity activity;
     private final List<Integer> imageSelectedList = new ArrayList<>();
     private final OnSelectedItemCallback onSelectedItemCallback;
     private List<ImageData> imageDataList;
     private boolean isViewScrollDown = true;
 
-    public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
-        this.context = context;
+    public MyRecyclerViewAdapter(Activity activity, List<ImageData> list) {
+        this.activity = activity;
         imageDataList = list;
-        onSelectedItemCallback = (OnSelectedItemCallback) context;
+        onSelectedItemCallback = (OnSelectedItemCallback) activity;
     }
 
     public void updateData(List<ImageData> imageDataList) {
@@ -60,7 +64,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recyclerview_holder, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.recyclerview_holder, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -70,7 +74,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         imageView.setPaintColor(Color.argb(0, 0, 0, 0));
         imageView.setCurrentId(R.drawable.vd_image_selected_init);
         if (isViewScrollDown) {
-            imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_2));
+            imageView.setAnimation(AnimationUtils.loadAnimation(activity, R.anim.item_animation_up_2));
         }
 
         // add listener for imageView
@@ -78,12 +82,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             if (position != RecyclerView.NO_POSITION) {
                 if (imageSelectedList.size() == 0) {
                     // if there is no selected item then go to ImageDetailActivity
-                    Intent intent = new Intent(context, ImageDetailActivity.class);
+                    Intent intent = new Intent(activity, ImageDetailActivity.class);
                     Bundle bundle = new Bundle();
+                    ActivityOptionsCompat activityOptionsCompat =
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imageView, "MyImage");
 
                     bundle.putParcelable(CLICKED_IMG, imageDataList.get(position));
                     intent.putExtras(bundle);
-                    context.startActivity(intent);
+                    activity.startActivity(intent, activityOptionsCompat.toBundle());
                 } else {
                     // if selected one item then user will be able to start quick select
                     setSelectedImage(imageView, position);
@@ -102,7 +108,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             imageView.clearPath();
         }
 
-        Glide.with(context)
+        Glide.with(activity)
                 .load(imageDataList.get(position).getData())
                 .apply(new RequestOptions().centerCrop())
                 .into(imageView);

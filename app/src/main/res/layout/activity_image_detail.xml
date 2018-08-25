@@ -12,9 +12,9 @@
         android:id="@+id/detailCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:visibility="invisible"
         app:cardCornerRadius="50dp"
         app:cardElevation="2dp">
 
@@ -113,6 +113,7 @@
         android:id="@+id/detailImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:transitionName="@string/image_transition_name" />
 
 </RelativeLayout>
