@@ -215,11 +215,14 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     private class CusScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        private float exitScale = .7f;
+
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = Math.abs(detector.getScaleFactor());
             float scale = currentScale * scaleFactor;
 
+            Log.d(TAG, "percent : " + (1 - scale) / (1 - exitScale));
             if (scale >= .5f) {
                 detailImageView.setScaleX(scale);
                 detailImageView.setScaleY(scale);
@@ -231,7 +234,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         public void onScaleEnd(ScaleGestureDetector detector) {
             currentScale = detailImageView.getScaleX();
 
-            if (currentScale < .7f) {
+            if (currentScale < exitScale) {
                 ImageDetailActivity.this.finish();
             } else if (currentScale < 1f) {
                 scaleImageWithAnimation(currentScale, 1f);
