@@ -50,7 +50,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
 
         if (hasFocus) {
-            hideUi();
+//            hideUi();
             loadImage();
         }
     }
@@ -62,7 +62,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         scaleGestureDetector = new ScaleGestureDetector(this, new CusScaleGestureListener());
         gestureDetector = new GestureDetector(this, new CusGestureListener());
-
 
         findView();
     }
@@ -209,6 +208,9 @@ public class ImageDetailActivity extends AppCompatActivity {
             cardView.closeCardView();
         } else {
             ImageDetailActivity.this.finish();
+
+            // if you want to finish with transition animation
+//            supportFinishAfterTransition();
         }
     }
 

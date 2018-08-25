@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,8 +85,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     // if there is no selected item then go to ImageDetailActivity
                     Intent intent = new Intent(activity, ImageDetailActivity.class);
                     Bundle bundle = new Bundle();
+                    Pair<View, String> viewStringPair = Pair.create(imageView, "MyImage");
                     ActivityOptionsCompat activityOptionsCompat =
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(activity, imageView, "MyImage");
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(activity, viewStringPair);
 
                     bundle.putParcelable(CLICKED_IMG, imageDataList.get(position));
                     intent.putExtras(bundle);
