@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
@@ -31,16 +30,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private final String TAG = "MyRecyclerViewAdapter";
 
     public static final String CLICKED_IMG = "CLICKED_IMG";
-    private final Activity activity;
+    private final Context context;
     private final List<Integer> imageSelectedList = new ArrayList<>();
     private final OnSelectedItemCallback onSelectedItemCallback;
     private List<ImageData> imageDataList;
     private boolean isViewScrollDown = true;
 
-    public MyRecyclerViewAdapter(Activity activity, List<ImageData> list) {
-        this.activity = activity;
+    public MyRecyclerViewAdapter(Activity context, List<ImageData> list) {
+        this.context = context;
         imageDataList = list;
-        onSelectedItemCallback = (OnSelectedItemCallback) activity;
+        onSelectedItemCallback = (OnSelectedItemCallback) context;
     }
 
     public void updateData(List<ImageData> imageDataList) {
@@ -65,7 +64,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.recyclerview_holder, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recyclerview_holder, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -75,7 +74,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         imageView.setPaintColor(Color.argb(0, 0, 0, 0));
         imageView.setCurrentId(R.drawable.vd_image_selected_init);
         if (isViewScrollDown) {
-            imageView.setAnimation(AnimationUtils.loadAnimation(activity, R.anim.item_animation_up_2));
+            imageView.setAnimation(AnimationUtils.loadAnimation(context, R.anim.item_animation_up_2));
         }
 
         // add listener for imageView
@@ -83,15 +82,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             if (position != RecyclerView.NO_POSITION) {
                 if (imageSelectedList.size() == 0) {
                     // if there is no selected item then go to ImageDetailActivity
-                    Intent intent = new Intent(activity, ImageDetailActivity.class);
+                    Intent intent = new Intent(context, ImageDetailActivity.class);
                     Bundle bundle = new Bundle();
                     Pair<View, String> viewStringPair = Pair.create(imageView, "MyImage");
                     ActivityOptionsCompat activityOptionsCompat =
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(activity, viewStringPair);
+                            ActivityOptionsCompat.makeSceneTransitionAnimation((MainActivity) context, viewStringPair);
 
                     bundle.putParcelable(CLICKED_IMG, imageDataList.get(position));
                     intent.putExtras(bundle);
-                    activity.startActivity(intent, activityOptionsCompat.toBundle());
+                    context.startActivity(intent, activityOptionsCompat.toBundle());
                 } else {
                     // if selected one item then user will be able to start quick select
                     setSelectedImage(imageView, position);
@@ -110,7 +109,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             imageView.clearPath();
         }
 
-        Glide.with(activity)
+        Glide.with(context)
                 .load(imageDataList.get(position).getData())
                 .apply(new RequestOptions().centerCrop())
                 .into(imageView);
