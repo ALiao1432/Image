@@ -36,7 +36,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private List<ImageData> imageDataList;
     private boolean isViewScrollDown = true;
 
-    public MyRecyclerViewAdapter(Activity context, List<ImageData> list) {
+    public MyRecyclerViewAdapter(Context context, List<ImageData> list) {
         this.context = context;
         imageDataList = list;
         onSelectedItemCallback = (OnSelectedItemCallback) context;
