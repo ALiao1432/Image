@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.study.ian.image.BuildConfig;
 import com.study.ian.image.ImageData;
+import com.study.ian.image.ImageDetailActivity;
 import com.study.ian.image.MainActivity;
 import com.study.ian.image.R;
 
@@ -216,8 +217,6 @@ public class MyDetailCardView extends MyCardView {
                 selectionArgs
         );
 
-        Intent intent = new Intent();
-        intent.setClass(context, MainActivity.class);
-        context.startActivity(intent);
+        ((ImageDetailActivity) context).finish();
     }
 }

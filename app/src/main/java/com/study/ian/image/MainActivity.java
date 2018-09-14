@@ -37,8 +37,8 @@ import java.util.stream.Collectors;
 public class MainActivity extends AppCompatActivity implements OnSelectedItemCallback {
 
     private final String TAG = "MainActivity";
-
     private final int MY_WRITE_EXTERNAL_REQUEST_CODE = 999;
+
     private List<ImageData> imgPathList = new ArrayList<>();
     private List<Integer> selectedList = new ArrayList<>();
     private RecyclerView recyclerView;
