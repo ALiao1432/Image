@@ -12,4 +12,7 @@
         <item name="android:colorEdgeEffect">@color/colorNavigationBar</item>
     </style>
 
+    <style name="AppTheme.Launcher" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/vd_launch_image_icon</item>
+    </style>
 </resources>
