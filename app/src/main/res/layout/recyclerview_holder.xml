@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.study.ian.image.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.study.ian.image.customview.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,4 +8,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionName="@string/image_transition_name" />
-</com.study.ian.image.MyLinearLayout>
+</com.study.ian.image.customview.MyLinearLayout>

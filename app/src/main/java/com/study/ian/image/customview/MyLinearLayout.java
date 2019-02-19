@@ -1,4 +1,4 @@
-package com.study.ian.image;
+package com.study.ian.image.customview;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutCompat;

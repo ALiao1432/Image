@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.study.ian.image.BuildConfig;
 import com.study.ian.image.ImageData;
 import com.study.ian.image.ImageDetailActivity;
-import com.study.ian.image.MainActivity;
 import com.study.ian.image.R;
 
 import java.io.File;
